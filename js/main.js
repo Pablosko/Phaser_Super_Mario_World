@@ -9,8 +9,8 @@ var gamePrefs=
     ENEMY_MAXHP:2,
     PLAYER_MAXHP:5,
 
-    level1Width: 16*10000,
-    level1Height: 256
+    level1Width: 320*16,
+    level1Height: 27*16
 }
 
 var config = 

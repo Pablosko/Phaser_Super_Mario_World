@@ -35,10 +35,10 @@ class mario extends character
     }
     setColliders()
     {
-        this.scene.physics.add.collider
+       this.collider = this.scene.physics.add.collider
         (
             this.character,
-            this.scene.floor,
+            this.scene.walls,
             this.ResetJump,
             null,
             this
@@ -46,7 +46,6 @@ class mario extends character
         this.body.setDragX(190);
 
     }
- 
     preUpdate(time,delta)
     {
         this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;

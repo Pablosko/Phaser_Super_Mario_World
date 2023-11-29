@@ -16,26 +16,39 @@ class gameState extends Phaser.Scene
         this.load.spritesheet('mario','mario/little_mario.png',
         {frameWidth:16,frameHeight:22});
         //this.load.image('bullet','spr_bullet_0.png');
-    }
 
+        this.load.setPath('assets/img/tilesets');
+        this.load.image('tileset_ground','floor_tileset.png');
+
+        this.load.setPath('assets/levels');
+        this.load.tilemapTiledJSON('level1','level1.json');
+
+    }
+    GenerateMap()
+    {
+        this.map = this.add.tilemap('level1');
+        //Cargo los tilesets
+        this.map.addTilesetImage('tileset_ground');
+        //Pinto las CAPAS/LAYERS
+        this.walls = this.map.createLayer('layer_ground','tileset_ground');
+     
+        
+        this.map.setCollisionByExclusion([-1], true, true, 'layer_ground');
+        this.map.createLayer('layer_ground_transparent','tileset_ground');
+      
+    }
     create()
     { 
+        this.GenerateMap();
         this.loadAnimations();
-        this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
-        this.bg.setScrollFactor(0);
+        // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
+        //this.bg.setScrollFactor(0);
         
-        this.floor = this.add.tileSprite(0,config.height - 16*2,16*100,16*2,'grass_tile').setOrigin(0);
-        this.floor.depth = 1;
-        this.physics.add.existing(this.floor);
-        this.floor.body.immovable = true;
-        this.floor.body.allowGravity = false;
-
         this.mario = new mario(this,config.width*0.2,config.height*.5);
 
         this.cameras.main.startFollow(this.mario);
         this.cameras.main.setBounds(0,0,
             gamePrefs.level1Width,gamePrefs.level1Height);
-        this.lastCamX = this.cameras.main.x;
 
     }
 
@@ -83,7 +96,7 @@ class gameState extends Phaser.Scene
     }
     TryParallax(dir)
     {
-            this.bg.tilePositionX += dir/2;
+        //this.bg.tilePositionX += dir/2;
     }
     IsCameraMoving()
     {
@@ -96,8 +109,5 @@ class gameState extends Phaser.Scene
     }
     update()
     { 
-        this.bg.tilePositionX;
-
     }
-  
 }
