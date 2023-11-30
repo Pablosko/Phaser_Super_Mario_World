@@ -11,14 +11,20 @@ class gameState extends Phaser.Scene
         this.cameras.main.setBackgroundColor("112"); 
         this.load.setPath('assets/img');
         this.load.image('bg','background_level1.png')
-        this.load.image('grass_tile','grass_tile.png');
         //this.load.image('bg_frontal','background_frontal.png');
         this.load.spritesheet('mario','mario/little_mario.png',
         {frameWidth:16,frameHeight:22});
+        this.load.spritesheet('lootBlock','lootBlock.png',
+        {frameWidth:16,frameHeight:16});
+        this.load.spritesheet('koopa','enemy_koopa_16x32.png',
+        {frameWidth:16,frameHeight:32});
         //this.load.image('bullet','spr_bullet_0.png');
 
         this.load.setPath('assets/img/tilesets');
         this.load.image('tileset_ground','floor_tileset.png');
+        this.load.image('tileset_pipes','pipes_tileset.png');
+        this.load.image('tileset_vegetation','bush_tileset.png');
+        this.load.image('tileset_arbusto','arbusto_big.png');
 
         this.load.setPath('assets/levels');
         this.load.tilemapTiledJSON('level1','level1.json');
@@ -29,18 +35,55 @@ class gameState extends Phaser.Scene
         this.map = this.add.tilemap('level1');
         //Cargo los tilesets
         this.map.addTilesetImage('tileset_ground');
+        this.map.addTilesetImage('tileset_pipes');
+        this.map.addTilesetImage('tileset_vegetation');
+        this.map.addTilesetImage('tileset_arbusto');
         //Pinto las CAPAS/LAYERS
         this.walls = this.map.createLayer('layer_ground','tileset_ground');
-     
-        
+        this.pipes = this.map.createLayer('layer_pipes','tileset_pipes');
+        this.map.createLayer('layer_vegetation','tileset_vegetation');
+        this.map.createLayer('layer_vegetation_back','tileset_arbusto');
+        this.lootBlocks = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        });
+        this.fruits = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        });
+        this.redKoopas = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        });
+
+        this.game_elements = this.map.getObjectLayer('game-elements');
+        this.game_elements.objects.forEach(function (element)
+        {
+            console.log(element);
+            switch (element.type)
+            {
+                case "lootBlock":
+                    this.lootBlocks.add(new lootBlock(this,element.x,element.y));
+                break;
+                case "fruit":
+                  //  this.fruits.add(new fruit(this,element.x,element.y));
+                break;
+                case "redKoopa":
+                  //  this.redKoopas.add(new redKoopa(this,element.x,element.y));
+                break;
+
+            }
+        },this);
+
         this.map.setCollisionByExclusion([-1], true, true, 'layer_ground');
+        this.map.setCollisionByExclusion([-1], true, true, 'layer_pipes');
         this.map.createLayer('layer_ground_transparent','tileset_ground');
       
     }
     create()
     { 
-        this.GenerateMap();
         this.loadAnimations();
+        this.GenerateMap();
         // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
         //this.bg.setScrollFactor(0);
         
@@ -50,8 +93,14 @@ class gameState extends Phaser.Scene
         this.cameras.main.setBounds(0,0,
             gamePrefs.level1Width,gamePrefs.level1Height);
 
-    }
+        this.CreateCollisions();
 
+
+    }
+    CreateCollisions()
+    {
+        this.physics.add.collider(this.mario, this.lootBlocks,(_mario,_block)=>{this.mario.OnWallCollide(_mario,_block)}, null, this);
+    }
     loadAnimations()
     {
         /*
@@ -75,21 +124,28 @@ class gameState extends Phaser.Scene
         {
             key: 'walk',
             frames:this.anims.generateFrameNumbers('mario', {start:3, end: 5}),
-            frameRate: 9,
+            frameRate: 11,
             repeat: -1
+        });
+        this.anims.create(
+         {
+                key: 'lootBlockAnimation',
+                frames:this.anims.generateFrameNumbers('lootBlock', {start:0, end: 3}),
+                frameRate: 11,
+                repeat: -1
         });
         this.anims.create(
             {
                 key: 'spin',
                 frames:this.anims.generateFrameNumbers('mario', {start:14, end: 17}),
-                frameRate: 20,
+                frameRate: 25,
                 repeat: -1
         });
         this.anims.create(
-            {
+        {
                 key: 'run',
                 frames:this.anims.generateFrameNumbers('mario', {start:6, end: 8}),
-                frameRate: 50,
+                frameRate: 35,
                 repeat: -1
         });
   

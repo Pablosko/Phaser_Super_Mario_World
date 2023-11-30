@@ -1,9 +1,9 @@
 var gamePrefs=
 {
-    PLAYER_ACCELERATION:20,
-    PLAYER_MAX_SPEED:75,
-    PLAYER_MAXRUN_SPEED:120,
-    PLAYER_JUMP_FORCE:-250,
+    PLAYER_ACCELERATION:7,
+    PLAYER_MAX_SPEED:65,
+    PLAYER_MAXRUN_SPEED:150,
+    PLAYER_JUMP_FORCE:-200,
     BULLET_SPEED:-100,
     ENEMY_SPEED:20,
     ENEMY_MAXHP:2,
@@ -33,6 +33,7 @@ var config =
         default:'arcade',
         arcade:
         {
+          //  debug:true,
             gravity:{y:9.81 * 75}
         },
     }
