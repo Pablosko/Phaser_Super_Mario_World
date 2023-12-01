@@ -8,6 +8,8 @@ class character extends Phaser.GameObjects.Sprite
         this.scene = _scene;
         this.character = this;
         this.setColliders();
+        this.maxHp = 2;
+        this.hp = this.maxHp;
     }
     setColliders()
     {
@@ -17,7 +19,12 @@ class character extends Phaser.GameObjects.Sprite
             this.scene.floor,
         );
     }
-
+    getDamage(damage,body)
+    {
+        this.hp-= damage
+        if(this.hp <= 0)
+            this.destroy(this);
+    }
     preUpdate(time,delta)
     {
         super.preUpdate(time,delta);

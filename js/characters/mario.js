@@ -17,6 +17,7 @@ class mario extends character
         this.runkey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);  
         this.body.checkCollision.up = false;
         this.body.setSize(this.width * 0.5, this.height);
+        this.hp = 1;
     }
 
  
@@ -55,6 +56,14 @@ class mario extends character
         this.body.setDragX(250);
 
     }
+    CollideWithEnemie(_mario,_enemie)
+    {
+        if(_mario.body.touching.down && _enemie.body.touching.up && _enemie.isVulnerable())
+        {
+            _enemie.getDamage(1,_mario.body);
+            _mario.jump();
+        }
+    }
     OnWallCollide(_mario,_block)
     {
         if (_mario.body.touching.down && _block.body.touching.up)
@@ -65,7 +74,7 @@ class mario extends character
     preUpdate(time,delta)
     {
         this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;
-        this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.4;
+        this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.8;
         if(this.cursores.left.isDown)
         {
             //this.nave.x -= gamePrefs.NAVE_SPEED;

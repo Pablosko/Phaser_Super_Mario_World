@@ -18,6 +18,10 @@ class gameState extends Phaser.Scene
         {frameWidth:16,frameHeight:16});
         this.load.spritesheet('koopa','enemy_koopa_16x32.png',
         {frameWidth:16,frameHeight:32});
+        this.load.spritesheet('l_koopa','enemy_koopaNoShield_16x16.png',
+        {frameWidth:16,frameHeight:16});
+        this.load.spritesheet('koopaShell','enemy_bullet_16x16.png',
+        {frameWidth:16,frameHeight:16});
         //this.load.image('bullet','spr_bullet_0.png');
 
         this.load.setPath('assets/img/tilesets');
@@ -51,9 +55,8 @@ class gameState extends Phaser.Scene
             immovable: true,
             allowGravity: false
         });
-        this.redKoopas = this.physics.add.group({
+        this.enemies = this.physics.add.group({
             immovable: true,
-            allowGravity: false
         });
 
         this.game_elements = this.map.getObjectLayer('game-elements');
@@ -68,8 +71,8 @@ class gameState extends Phaser.Scene
                 case "fruit":
                   //  this.fruits.add(new fruit(this,element.x,element.y));
                 break;
-                case "redKoopa":
-                  //  this.redKoopas.add(new redKoopa(this,element.x,element.y));
+                case "koopaShell":
+                    this.enemies.add(new koopa(this,element.x,element.y,'redKoopa'));
                 break;
 
             }
@@ -100,6 +103,8 @@ class gameState extends Phaser.Scene
     CreateCollisions()
     {
         this.physics.add.collider(this.mario, this.lootBlocks,(_mario,_block)=>{this.mario.OnWallCollide(_mario,_block)}, null, this);
+        this.physics.add.collider(this.enemies, this.walls,(_enemie,_wall)=>{}, null, this);
+        this.physics.add.collider(this.mario, this.enemies,(_mario,_enemie)=>{this.mario.CollideWithEnemie(_mario,_enemie)}, null, this);
     }
     loadAnimations()
     {
@@ -148,6 +153,42 @@ class gameState extends Phaser.Scene
                 frameRate: 35,
                 repeat: -1
         });
+   
+        this.anims.create(
+        {
+            key: 'redKoopa',
+            frames:this.anims.generateFrameNumbers('koopa', {start:4, end: 5}),
+            frameRate: 11,
+            repeat: -1
+        });
+        this.anims.create(
+     {
+                key: 'l_redKoopa',
+                frames:this.anims.generateFrameNumbers('l_koopa', {start:2, end: 3}),
+                frameRate: 11,
+                repeat: -1
+        });
+        this.anims.create(
+        {
+            key: 'greenKoopa',
+            frames:this.anims.generateFrameNumbers('koopa', {start:1, end: 2}),
+            frameRate: 11,
+            repeat: -1
+        });  
+        this.anims.create(
+            {
+                key: 'greenKoopa_shell',
+                frames:this.anims.generateFrameNumbers('koopaShell', {start:0, end: 0}),
+                frameRate: 0,
+                repeat: -1
+            });  
+            this.anims.create(
+                {
+                    key: 'redKoopa_shell',
+                    frames:this.anims.generateFrameNumbers('koopaShell', {start:3, end: 3}),
+                    frameRate: 0,
+                    repeat: -1
+                });  
   
     }
     TryParallax(dir)
@@ -162,6 +203,12 @@ class gameState extends Phaser.Scene
             return true;
         };
         return false;
+    }
+    CreateLittleKoopa(x,y,dir,type)
+    {
+        this.newKoopa = new koopa(this,x + 8,y + 16,'l_' + type);
+        this.newKoopa.OnUnShelled(dir);
+        this.enemies.add(this.newKoopa);
     }
     update()
     { 
