@@ -104,7 +104,11 @@ class gameState extends Phaser.Scene
     {
         this.physics.add.collider(this.mario, this.lootBlocks,(_mario,_block)=>{this.mario.OnWallCollide(_mario,_block)}, null, this);
         this.physics.add.collider(this.enemies, this.walls,(_enemie,_wall)=>{}, null, this);
-        this.physics.add.collider(this.mario, this.enemies,(_mario,_enemie)=>{this.mario.CollideWithEnemie(_mario,_enemie)}, null, this);
+        this.physics.add.collider(this.mario, this.enemies,(_mario,_enemie)=>{
+            this.mario.CollideWithEnemie(_mario,_enemie);
+            _enemie.CollideWithPlayer(_enemie,_mario);
+        }, null, this);
+        this.physics.add.collider(this.enemies, this.enemies,(_enemie1,_enemie2)=>{_enemie1.collideWithEnemie(_enemie1,_enemie2)}, null, this);
     }
     loadAnimations()
     {
