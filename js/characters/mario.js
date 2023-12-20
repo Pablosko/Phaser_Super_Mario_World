@@ -10,12 +10,10 @@ class mario extends character
         this.currentJumpFrames = 0;
         this.canJump = true;
         this.spining = false;
-
         this.cursores = this.scene.input.keyboard.createCursorKeys();
         this.jumpKey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);  
         this.spinKey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);  
         this.runkey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);  
-        this.body.checkCollision.up = false;
         this.body.setSize(this.width * 0.5, this.height);
         this.hp = 1;
     }
@@ -27,13 +25,15 @@ class mario extends character
         this.anims.stop();
         this.setFrame(11);
         this.jumping = true;
+
     }
     ResetJump()
     {
+    
         this.currentJumpFrames = 0;
         this.jumping = false; 
         this.spining = false;
-      
+        this.body.checkCollision.up = false;
     }
     setColliders()
     {
@@ -69,7 +69,10 @@ class mario extends character
         if (_mario.body.touching.down && _block.body.touching.up)
             this.ResetJump();
         if (_mario.body.touching.up && _block.body.touching.down)
-            this.body.setVelocityY(-10);
+        {
+                this.canJump = false
+            this.body.setVelocityY(50);
+        }
     }
     preUpdate(time,delta)
     {
@@ -131,13 +134,19 @@ class mario extends character
         }
         if(this.jumpKey.isDown && this.currentJumpFrames < this.jumpFrames && this.canJump) 
         {
+            if(Phaser.Input.Keyboard.JustDown(this.jumpKey))
+            {
+                this.body.checkCollision.up = true;
+            }
             this.currentJumpFrames++;
             this.jump();
             if(this.currentJumpFrames >= this.jumpFrames)
                 this.canJump = false;
         }
-        if( Phaser.Input.Keyboard.DownDuration(this.spinKey,250) && this.currentJumpFrames < this.spinframes && this.canJump) 
+        if(Phaser.Input.Keyboard.DownDuration(this.spinKey,250) && this.currentJumpFrames < this.spinframes && this.canJump) 
         {
+            if(this.currentJumpFrames == 0)
+                this.body.checkCollision.up = true;
             this.currentJumpFrames++;
             this.jump();
             this.anims.play('spin');
@@ -146,12 +155,6 @@ class mario extends character
                 this.canJump = false;
         }
 
-        
-        if(!this.character.body.onFloor())
-        {
-
-        }
-        
         super.preUpdate(time, delta);
     }
 }

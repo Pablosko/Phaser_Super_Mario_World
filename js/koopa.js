@@ -9,8 +9,6 @@ class koopa extends enemy
         this.canMove = true;
         this.dash = false;
         this.isShell = false;
-
-
        
     }
     setColliders()
@@ -31,14 +29,17 @@ class koopa extends enemy
     }
     CollideWithPlayer(enemie,player)
     {
+        if(enemie.body ==undefined)
+            return;
         console.log("mario collide sheel")
-        super.collideWithEnemie(enemie,player);
-        console.log(this.isShell);
-
-        if(this.isShell && this.canMove)
+        super.CollideWithPlayer(enemie,player);
+        if(enemie.isShell && enemie.canMove)
         {
-            this.dir = Math.sign(this.body.x - player.x);
-            this.trowShell(this.dir)
+            enemie.dir = Math.sign(enemie.body.x - player.body.x);
+            enemie.trowShell(enemie.dir);
+        }else
+        {
+            //mario get damage
         }
     }
     trowShell(dir)
@@ -64,8 +65,6 @@ class koopa extends enemy
                 repeat: 1
             }
         );
-
-
     }
     getDamage(damage,body)
     {
@@ -84,7 +83,6 @@ class koopa extends enemy
     { 
         this.hp = 1;
         this.body.setSize(16,16).setOffset(0,0);
-        console.log(dir)
         
         this.canMove = false;
         this.scene.time.addEvent
@@ -114,5 +112,23 @@ class koopa extends enemy
                 repeat: 1
             }
         );
+    }
+    isVulnerable()
+    {
+        return super.isVulnerable() && !this.isShell;
+    }
+
+    collideWithEnemie(enemie1,enemie2)
+    {
+        super.collideWithEnemie(enemie1,enemie2)
+        
+        
+        if(enemie1.isShell && enemie1.body.velocity.x != 0)
+        {
+            console.log(enemie1.body.velocity)
+            console.log(enemie2)
+            console.log("kill koopa")
+            enemie2.getDamage(2000,enemie1);            
+        }
     }
 }
