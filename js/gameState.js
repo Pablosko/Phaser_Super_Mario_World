@@ -69,12 +69,17 @@ class gameState extends Phaser.Scene
                     this.lootBlocks.add(new lootBlock(this,element.x,element.y));
                 break;
                 case "fruit":
-                  //  this.fruits.add(new fruit(this,element.x,element.y));
+                    const fruitObj = {posX: element.x, posY: element.y }
+                    this.fruitInst = new fruit(this, fruitObj, 'fruit');
+                //  this.fruits.add(new fruit(this,element.x,element.y));
                 break;
                 case "koopaShell":
                     this.enemies.add(new koopa(this,element.x,element.y,'redKoopa'));
                 break;
-
+                case "coin":
+                    const coinObj = { posX: element.x, posY: element.y }
+                    this.coinInst = new coinPickeable(this, coinObj, 'coin');
+                break;
             }
         },this);
 

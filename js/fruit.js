@@ -1,15 +1,11 @@
-class fruit extends Phaser.GameObjects.Sprite 
+class fruit extends pickeableItem
 {
-    constructor(_scene,_posX,_posY)
+    constructor(_scene, _zone, _spriteTag)
     { //instanciar el objeto
-        super(_scene,_posX,_posY,'fruit');
-        _scene.add.existing(this);
-        this.scene = _scene;
-
-      
+        super(_scene, _zone, _spriteTag);      
     }
-    preUpdate(time,delta)
+    pickItem()
     {
-        super.preUpdate(time, delta);
+        console.log("pick fruit");
     }
 }
