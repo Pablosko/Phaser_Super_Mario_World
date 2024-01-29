@@ -24,6 +24,17 @@ class gameState extends Phaser.Scene
         {frameWidth:16,frameHeight:16});
         //this.load.image('bullet','spr_bullet_0.png');
 
+        this.load.setPath('assets/img/objects');
+        this.load.spritesheet('yoshiCoin', 'coin_yoshi.png', 
+        {frameWidth:16,frameHeight:25});
+        this.load.spritesheet('normalCoin', 'normal_coins.png', 
+        {frameWidth:16,frameHeight:16});
+        this.load.spritesheet('buttonP', 'button_P.png', 
+        {frameWidth:16,frameHeight:16});
+        this.load.spritesheet('apple', 'apple.png', 
+        {frameWidth:14,frameHeight:13});
+        this.load.spritesheet('eyeCoin', 'eyecoin.png', {frameWidth:16,frameHeight:16})
+
         this.load.setPath('assets/img/tilesets');
         this.load.image('tileset_ground','floor_tileset.png');
         this.load.image('tileset_pipes','pipes_tileset.png');
@@ -33,7 +44,10 @@ class gameState extends Phaser.Scene
         this.load.setPath('assets/levels');
         this.load.tilemapTiledJSON('level1','level1.json');
 
+        this.load.setPath('assets/fonts');
+        this.load.bitmapFont('UIfont', 'Unnamed.png', 'Unnamed.xml');
     }
+
     GenerateMap()
     {
         this.map = this.add.tilemap('level1');
@@ -47,11 +61,16 @@ class gameState extends Phaser.Scene
         this.pipes = this.map.createLayer('layer_pipes','tileset_pipes');
         this.map.createLayer('layer_vegetation','tileset_vegetation');
         this.map.createLayer('layer_vegetation_back','tileset_arbusto');
+        
+        //Set de los colliders
+        this.map.setCollisionByExclusion([-1], true, true, 'layer_ground');
+        this.map.setCollisionByExclusion([-1], true, true, 'layer_pipes');
+        this.map.createLayer('layer_ground_transparent','tileset_ground');
+    }
+
+    generateGameElements()
+    {
         this.lootBlocks = this.physics.add.group({
-            immovable: true,
-            allowGravity: false
-        });
-        this.fruits = this.physics.add.group({
             immovable: true,
             allowGravity: false
         });
@@ -62,40 +81,44 @@ class gameState extends Phaser.Scene
         this.game_elements = this.map.getObjectLayer('game-elements');
         this.game_elements.objects.forEach(function (element)
         {
-            console.log(element);
+            // ID can be -> fruit, normal_coin, yoshi_coin
             switch (element.type)
             {
                 case "lootBlock":
                     this.lootBlocks.add(new lootBlock(this,element.x,element.y));
                 break;
                 case "fruit":
-                    const fruitObj = {posX: element.x, posY: element.y }
-                    this.fruitInst = new fruit(this, fruitObj, 'fruit');
-                //  this.fruits.add(new fruit(this,element.x,element.y));
+                    this.object = new pickeableItem(this, element.x, element.y, "fruit", 'apple');
                 break;
                 case "koopaShell":
                     this.enemies.add(new koopa(this,element.x,element.y,'redKoopa'));
                 break;
                 case "coin":
-                    const coinObj = { posX: element.x, posY: element.y }
-                    this.coinInst = new coinPickeable(this, coinObj, 'coin');
+                   this.object = new pickeableItem(this, element.x, element.y, "normal_coin", 'normalCoin');
+
+                break;
+                case "coinsYoshi":
+                    this.object = new pickeableItem(this, element.x, element.y, "yoshi_coin", 'yoshiCoin');
+                break;
+                case "yellowBlock":
+                    this.object = new pickeableItem(this, element.x, element.y, "eye_coin", 'eyeCoin')
                 break;
             }
         },this);
-
-        this.map.setCollisionByExclusion([-1], true, true, 'layer_ground');
-        this.map.setCollisionByExclusion([-1], true, true, 'layer_pipes');
-        this.map.createLayer('layer_ground_transparent','tileset_ground');
-      
     }
+
     create()
     { 
         this.loadAnimations();
         this.GenerateMap();
+        // ?? touches dont move
         // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
-        //this.bg.setScrollFactor(0);
-        
+       //  this.bg.setDepth(-50);
+       // this.bg.setScrollFactor(0);
+
+
         this.mario = new mario(this,config.width*0.2,config.height*.5);
+        this.generateGameElements();
 
         this.cameras.main.startFollow(this.mario);
         this.cameras.main.setBounds(0,0,
@@ -198,7 +221,35 @@ class gameState extends Phaser.Scene
                     frameRate: 0,
                     repeat: -1
                 });  
-  
+                this.anims.create(
+                    {
+                        key: 'normalCoinIdle',
+                        frames:this.anims.generateFrameNumbers('normalCoin', {start:0, end: 3}),
+                        frameRate: 11,
+                        repeat: -1
+                    });
+                    this.anims.create(
+                        {
+                            key: 'yoshiCoinIdle',
+                            frames:this.anims.generateFrameNumbers('yoshiCoin', {start:0, end: 3}),
+                            frameRate: 11,
+                            repeat: -1
+                        }); 
+                        this.anims.create(
+                            {
+                                key: 'appleIdle',
+                                frames:this.anims.generateFrameNumbers('apple', {start:0, end: 2}),
+                                frameRate: 11,
+                                repeat: -1
+                            }); 
+                            this.anims.create(
+                                {
+                                    key: 'eyeCoinImpact',
+                                    frames:this.anims.generateFrameNumbers('eyeCoin', {start:0, end: 3}),
+                                    frameRate: 11,
+                                    repeat: -1
+                                }); 
+                     
     }
     TryParallax(dir)
     {
