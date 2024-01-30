@@ -93,5 +93,9 @@ class uiScene extends Phaser.Scene
     {
         this.currentTime -= 1;
         this.timeText.setText("" + this.currentTime);
+        if(this.currentTime <= 0)
+        {
+            //SetGame Over
+        }
     }
 }

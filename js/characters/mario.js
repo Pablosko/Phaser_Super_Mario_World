@@ -16,6 +16,9 @@ class mario extends character
         this.runkey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);  
         this.body.setSize(this.width * 0.5, this.height);
         this.hp = 1;
+
+        //Yoshi variables
+        this.isOnYoshi = false;
     }
 
  
@@ -25,7 +28,6 @@ class mario extends character
         this.anims.stop();
         this.setFrame(11);
         this.jumping = true;
-
     }
     ResetJump()
     {

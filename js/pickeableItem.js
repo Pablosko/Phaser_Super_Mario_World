@@ -37,8 +37,8 @@ class pickeableItem extends Phaser.GameObjects.Sprite
 
         this.setColliders();
         this.object = id;
-        this.body.setAllowGravity(false); // No permitir gravedad
-        this.body.setImmovable(true); // Hacer el objeto inmóvil
+        this.body.setAllowGravity(false); 
+        this.body.setImmovable(true);
     }
     setColliders()
     {
@@ -46,7 +46,6 @@ class pickeableItem extends Phaser.GameObjects.Sprite
             this.scene.mario,
             this.areaZone,
             () => {
-                console.log("ItemPicked")
                 this.pickItem();
             },
             null,
@@ -75,7 +74,12 @@ class pickeableItem extends Phaser.GameObjects.Sprite
                 this.destroy();
             break;     
             case "fruit":
-                console.log("Get fruit");
+                if(this.scene.mario.isOnYoshi)
+                {
+                    console.log("Eat");
+                    this.areaZone.body.setEnable(false);
+                    this.destroy();
+                }
                 //Si esta en yoshi y yoshi != comiendo
             break;
             case "eye_coin":
