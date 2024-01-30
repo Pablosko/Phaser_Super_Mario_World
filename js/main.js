@@ -18,7 +18,7 @@ var config =
     type: Phaser.AUTO,
     width: 256,
     height: 256,
-    scene:[gameState], //array con las escenas
+    scene:[ menu, gameState, uiScene ], //array con las escenas
     render:
     {
         pixelArt:true

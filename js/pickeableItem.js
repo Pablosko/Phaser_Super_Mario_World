@@ -6,7 +6,7 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         _scene.add.existing(this);
         this.scene = _scene;
         _scene.physics.world.enable(this);
-
+        this.events = new Phaser.Events.EventEmitter();
         //Create Zone, la size se tiene que poner antes de hacer enable
         this.areaZone = this.scene.add.zone(posX, posY);     
         switch(id)
@@ -65,13 +65,18 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         switch(this.object)
         {
             case "normal_coin":
-                console.log("get normal coin");
+                this.scene.events.emit('addCoin', 1);
+                this.areaZone.body.setEnable(false); 
+                this.destroy();
             break;
             case "yoshi_coin":
-                console.log("Get yoshi coin");
+                this.scene.events.emit('addYoshiCoin');
+                this.areaZone.body.setEnable(false); 
+                this.destroy();
             break;     
             case "fruit":
                 console.log("Get fruit");
+                //Si esta en yoshi y yoshi != comiendo
             break;
             case "eye_coin":
                 this.anims.play('eyeCoinImpact');
