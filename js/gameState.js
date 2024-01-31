@@ -6,26 +6,39 @@ class gameState extends Phaser.Scene {
     preload() {
         this.cameras.main.setBackgroundColor("112");
         this.load.setPath('assets/img');
-        this.load.image('bg', 'backgrounds/background_level1.png')
-
-        //Mario Load sprites
-        this.load.spritesheet('mario', 'mario/little_mario.png', { frameWidth: 16, frameHeight: 22 });
-        this.load.spritesheet('marioBig', 'mario/bigmario_normal.png', { frameWidth: 16, frameHeight: 31 });
-        this.load.spritesheet('marioBigRun', 'mario/mariobig_run.png', { frameWidth: 18, frameHeight: 28 });
-        this.load.spritesheet('marioBigRidingYoshi', 'mario/mariobig_ridingYoshi.png', { frameWidth: 16, frameHeight: 22 });
-        this.load.spritesheet('marioRidingYoshi', 'mario/mariomini_ridingYoshi.png', { frameWidth: 16, frameHeight: 21 });
-
+        this.load.image('bg', 'backgrounds/background_level1.png');
         //Koopa Loads
-        this.load.spritesheet('lootBlock', 'lootBlock.png',
-            { frameWidth: 16, frameHeight: 16 });
+
+        this.loadEnemiesSprites();
+        this.loadMarioSprites();        
+        this.loadObjectsSprites();
+        this.loadYoshiSprites();
+        this.loadTileSets();
+
+        this.load.setPath('assets/levels');
+        this.load.tilemapTiledJSON('level1', 'level1.json');
+
+        this.load.setPath('assets/fonts');
+        this.load.bitmapFont('UIfont', 'Unnamed.png', 'Unnamed.xml');
+
+        this.loadAudios();
+    }
+
+    loadEnemiesSprites()
+    {
+        this.load.setPath('assets/img/enemies')
         this.load.spritesheet('koopa', 'enemy_koopa_16x32.png',
             { frameWidth: 16, frameHeight: 32 });
         this.load.spritesheet('l_koopa', 'enemy_koopaNoShield_16x16.png',
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('koopaShell', 'enemy_bullet_16x16.png',
             { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('mole', 'mole.png', 
+            { frameWidth: 16, frameHeight: 16 });
+    }
 
-        
+    loadObjectsSprites()
+    {
         this.load.setPath('assets/img/objects');
         this.load.spritesheet('yoshiCoin', 'coin_yoshi.png',
             { frameWidth: 16, frameHeight: 25 });
@@ -35,23 +48,94 @@ class gameState extends Phaser.Scene {
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('apple', 'apple.png',
             { frameWidth: 14, frameHeight: 13 });
-        this.load.spritesheet('eyeCoin', 'eyecoin.png', { frameWidth: 16, frameHeight: 16 })
+        this.load.spritesheet('eyeCoin', 'eyecoin.png', 
+            { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('lootBlock', 'lootBlock.png',
+            { frameWidth: 16, frameHeight: 16 });
+    }
 
+    loadMarioSprites()
+    {
+        this.load.setPath('assets/img/mario');
+        this.load.spritesheet('mario', 'little_mario.png', { frameWidth: 16, frameHeight: 22 });
+        this.load.spritesheet('marioBig', 'bigmario_normal.png', { frameWidth: 16, frameHeight: 31 });
+        this.load.spritesheet('marioBigRun', 'mariobig_run.png', { frameWidth: 18, frameHeight: 31 });
+        this.load.spritesheet('marioBigRidingYoshi', 'mariobig_ridingYoshi.png', { frameWidth: 16, frameHeight: 22 });
+        this.load.spritesheet('marioRidingYoshi', 'mariomini_ridingYoshi.png', { frameWidth: 16, frameHeight: 21 });
+        this.load.spritesheet('growMario', 'grow_mario.png', { frameWidth: 16, frameHeight: 31 } );
+    }
 
+    loadYoshiSprites()
+    {
+        this.load.setPath('assets/img/yoshi');
+        this.load.spritesheet('eggExplosion', 'egg_explosion.png', 
+        { frameWidth: 18, frameHeight: 19 });
+        this.load.spritesheet('egg', 'yoshi_eggs.png', 
+        { frameWidth: 14, frameHeight: 16 });
+        this.load.spritesheet('yoshiSpawn', 'yoshi_spawn.png', 
+        { frameWidth: 26, frameHeight: 32 });
+        this.load.spritesheet('yoshiSprites', 'yoshi_sprites.png', 
+        { frameWidth: 26, frameHeight: 32 });
+        this.load.spritesheet('yoshiTongue', 'yoshi_tongue.png', 
+        { frameWidth: 48, frameHeight: 32 });
+        this.load.spritesheet('yoshiWalks', 'yoshi_walking.png', 
+        { frameWidth: 26, frameHeight: 32 });
+    }
+
+    loadTileSets()
+    {
         this.load.setPath('assets/img/tilesets');
         this.load.image('tileset_ground', 'floor_tileset.png');
         this.load.image('tileset_pipes', 'pipes_tileset.png');
         this.load.image('tileset_vegetation', 'bush_tileset.png');
         this.load.image('tileset_arbusto', 'arbusto_big.png');
-
-        this.load.setPath('assets/levels');
-        this.load.tilemapTiledJSON('level1', 'level1.json');
-
-        this.load.setPath('assets/fonts');
-        this.load.bitmapFont('UIfont', 'Unnamed.png', 'Unnamed.xml');
     }
 
-    GenerateMap() {
+    loadAudios()
+    {
+        this.load.setPath('assets/sounds');
+        this.load.audio('music_gameover', 'game_over.wav');
+        this.load.audio('music_game', 'overworld.mp3');
+        this.load.audio('sound_jump', 'jump.wav');
+        this.load.audio('sound_pick_coin', 'pick_coin.wav');
+        this.load.audio('sound_pick_mushroom', 'pick_mushroom.wav');
+        this.load.audio('sound_pick_power_up', 'power_up.wav');
+        this.load.audio('sound_spawn_power_up', 'power_up_appears.wav');
+        this.load.audio('sound_ridingYoshi', 'riding_yoshi.wav');
+        this.load.audio('sound_spin_jump', 'spin_jump.wav');
+        this.load.audio('sound_death', 'mario_death.mp3');
+
+    }
+
+    create() {
+        //temporal
+        const uiScene = this.scene.get('UIScene');
+        this.customEmiter = new Phaser.Events.EventEmitter();
+        this.loadAnimations();
+        this.generateMap();
+        // ?? touches dont move
+        // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
+        //  this.bg.setDepth(-50);
+        // this.bg.setScrollFactor(0);
+
+
+        this.mario = new mario(this, config.width * 0.2, config.height * .5);
+        this.generateGameElements();
+        this.cameras.main.startFollow(this.mario);
+        this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
+
+        this.backgroundGameMusic = this.sound.add('music_game', { loop: true });
+        this.timerEvent = this.time.addEvent({
+            delay: 100,  
+            callback: () => { this.backgroundGameMusic.play(); },  
+            callbackScope: this,
+            loop: false  
+        });
+
+        this.createCollisions();
+    }
+
+    generateMap() {
         this.map = this.add.tilemap('level1');
         //Cargo los tilesets
         this.map.addTilesetImage('tileset_ground');
@@ -106,28 +190,7 @@ class gameState extends Phaser.Scene {
         }, this);
     }
 
-    create() {
-        //temporal
-        const uiScene = this.scene.get('UIScene');
-        this.customEmiter = new Phaser.Events.EventEmitter();
-
-        this.loadAnimations();
-        this.GenerateMap();
-        // ?? touches dont move
-        // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
-        //  this.bg.setDepth(-50);
-        // this.bg.setScrollFactor(0);
-
-
-        this.mario = new mario(this, config.width * 0.2, config.height * .5);
-        this.generateGameElements();
-        this.cameras.main.startFollow(this.mario);
-        this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
-
-        this.CreateCollisions();
-    }
-
-    CreateCollisions() {
+    createCollisions() {
         this.physics.add.collider(this.mario, this.lootBlocks, (_mario, _block) => { this.mario.OnWallCollide(_mario, _block) }, null, this);
         this.physics.add.collider(this.enemies, this.walls, (_enemie, _wall) => { }, null, this);
         this.physics.add.collider(this.mario, this.enemies, (_mario, _enemie) => {
@@ -136,12 +199,10 @@ class gameState extends Phaser.Scene {
         }, null, this);
         this.physics.add.collider(this.enemies, this.enemies, (_enemie1, _enemie2) => { _enemie1.collideWithEnemie(_enemie1, _enemie2) }, null, this);
     }
+
     loadAnimations() {
-        this.loadLittleMarioAnimations();
-        this.loadBigMarioAnimations();
         this.loadYoshiAnimations();
         this.loadKoopaAnimations();
-
         //Misc animations
 
         this.anims.create(
@@ -181,58 +242,6 @@ class gameState extends Phaser.Scene {
             });
     }
 
-
-    loadLittleMarioAnimations() {
-        /*
-           0 -> IDLE 1 -> LOOK_UP 2 -> DUCK 3 al 5 -> WALK 6 al 8 -> RUN 9 -> SKID  10 -> PIPE 11 -> JUMP  12 -> FALL 13 -> RUN JUMP 14 al 17 -> SPIN JUMP 18 -> SLIDe 19 -> KICK
-          20 al 22 -> SWIM 23 VICTORY
-          */
-        this.anims.create(
-            {
-                key: 'walk',
-                frames: this.anims.generateFrameNumbers('mario', { start: 3, end: 5 }),
-                frameRate: 11,
-                repeat: -1
-            });
-        this.anims.create(
-            {
-                key: 'spin',
-                frames: this.anims.generateFrameNumbers('mario', { start: 14, end: 17 }),
-                frameRate: 25,
-                repeat: -1
-            });
-        this.anims.create(
-            {
-                key: 'run',
-                frames: this.anims.generateFrameNumbers('mario', { start: 6, end: 8 }),
-                frameRate: 35,
-                repeat: -1
-            });
-
-    }
-    loadBigMarioAnimations() {
-        this.anims.create(
-            {
-                key: 'walkBig',
-                frames: this.anims.generateFrameNumbers('marioBig', { start: 3, end: 5 }),
-                frameRate: 11,
-                repeat: -1
-            });
-        this.anims.create(
-            {
-                key: 'spinBig',
-                frames: this.anims.generateFrameNumbers('marioBig', { start: 10, end: 13 }),
-                frameRate: 25,
-                repeat: -1
-            });
-        this.anims.create(
-            {
-                key: 'runBig',
-                frames: this.anims.generateFrameNumbers('marioBigRun', { start: 0, end: 2 }),
-                frameRate: 35,
-                repeat: -1
-            });
-    }
     loadYoshiAnimations() {
 
     }

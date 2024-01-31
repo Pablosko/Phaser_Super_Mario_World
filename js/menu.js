@@ -15,7 +15,9 @@ class menu extends Phaser.Scene
         this.load.image('bg_black', 'bg_menu_black.png');
         
         //Load sounds
-        this.load.setPath('assets/sounds')
+        this.load.setPath('assets/sounds');
+        this.load.audio('music_title', 'title.mp3');
+
         this.load.setPath('assets/fonts');
         this.load.bitmapFont('UIfont', 'Unnamed.png', 'Unnamed.xml');
     }
@@ -24,6 +26,16 @@ class menu extends Phaser.Scene
     {
         this.bg = this.add.sprite(0, 0, 'bg_black').setOrigin(0, 0);
         this.createTexts();
+
+        this.backgroundMusic = this.sound.add('music_title', { loop: true });
+        
+        this.timerEvent = this.time.addEvent({
+            delay: 100,  
+            callback: () => { this.backgroundMusic.play(); },  
+            callbackScope: this,
+            loop: false  
+        });
+        
     }
 
     createTexts()
@@ -61,6 +73,11 @@ class menu extends Phaser.Scene
     cameraFade()
     {
         this.cameras.main.fadeOut(2000);
+        this.tweens.add({
+            targets:  this.backgroundMusic,
+            volume:   0,
+            duration: 2000
+        });
         this.cameras.main.once('camerafadeoutcomplete', () => {this.scene.start('main_scene'); this.scene.start('UIScene');});
     }
 
