@@ -65,6 +65,18 @@ class pickeableItem extends Phaser.GameObjects.Sprite
             null,
             this
         );
+/*
+        this.scene.physics.add.overlap(
+            this.scene.mario,
+            this.areaZone,
+            () => {
+                this.scene.input.keyboard.on('keydown-E', () => {
+                    this.pickItem();
+                });
+            },
+            null,
+            this
+        );*/
     }
 
     preUpdate(time,delta)
