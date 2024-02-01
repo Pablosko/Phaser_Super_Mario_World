@@ -16,6 +16,7 @@ class buttonPBlock extends Phaser.GameObjects.Sprite
         this.areaZone.body.setImmovable();
         this.areaZone.body.setAllowGravity(false);
         this.areaZone.body.debugBodyColor = 0xffffff;
+        this.setZoneCollider();
 
         this.setFrame(block.frame);
     }
@@ -43,14 +44,27 @@ class buttonPBlock extends Phaser.GameObjects.Sprite
             null,
             this
         );
-        this.destroy(this.areaZone);
+
+        this.collider2 = this.scene.physics.add.collider
+        (
+            this,
+            this.scene.walls,
+            this.cosa,
+            null,
+            this
+        );
+
+        this.areaZone.body.setEnable(false); 
     }
 
     onTriggerEnter()
     {
-        //Drop to ground
-        //Si caes encima
         this.setCollider();
+        this.body.setAllowGravity(true);
+    }
+    cosa()
+    {
+
     }
 
     onJumpUp()

@@ -5,8 +5,6 @@ class lootBlock extends Phaser.GameObjects.Sprite
         super(_scene,_posX,_posY,'lootBlock');
         _scene.add.existing(this);
         this.scene = _scene;
-
-
         this.areaZone = this.scene.add.zone(_posX, _posY + 8);     
         this.areaZone.setSize(12,5);
         this.scene.physics.world.enable(this.areaZone);

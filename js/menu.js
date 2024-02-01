@@ -59,12 +59,6 @@ class menu extends Phaser.Scene
         )
     }
 
-
-    loadMusic()
-    {
-
-    }
-
     startMenu()
     {
         this.cameraFade();

@@ -214,8 +214,10 @@ class gameState extends Phaser.Scene {
                     this.object = new normalBlock(this, object);
                 break;
                 case "topoFloor":
+                  //  const objectTopo = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
+                    //this.object = new 
                 break;
-                case "topoWall":
+                case "topoWall": 
                 break;
             }
         }, this);
