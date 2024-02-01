@@ -7,6 +7,7 @@ class gameState extends Phaser.Scene {
         this.cameras.main.setBackgroundColor("112");
         this.load.setPath('assets/img');
         this.load.image('bg', 'backgrounds/background_level1.png');
+        this.load.image('bg_start', 'backgrounds/bg_mariostart.png')
         //Koopa Loads
 
         this.loadEnemiesSprites();
@@ -14,6 +15,12 @@ class gameState extends Phaser.Scene {
         this.loadObjectsSprites();
         this.loadYoshiSprites();
         this.loadTileSets();
+
+        this.load.setPath('assets/img/misc');
+        this.load.spritesheet('blocks', 'blocks.png',
+            { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('powerUps', 'starmushroom.png',
+            { frameWidth: 16, frameHeight: 16 });
 
         this.load.setPath('assets/levels');
         this.load.tilemapTiledJSON('level1', 'level1.json');
@@ -52,6 +59,7 @@ class gameState extends Phaser.Scene {
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('lootBlock', 'lootBlock.png',
             { frameWidth: 16, frameHeight: 16 });
+
     }
 
     loadMarioSprites()
@@ -94,15 +102,15 @@ class gameState extends Phaser.Scene {
     loadAudios()
     {
         this.load.setPath('assets/sounds');
-        this.load.audio('music_gameover', 'game_over.wav');
-        this.load.audio('music_game', 'overworld.mp3');
-        this.load.audio('sound_jump', 'jump.wav');
-        this.load.audio('sound_pick_coin', 'pick_coin.wav');
-        this.load.audio('sound_pick_mushroom', 'pick_mushroom.wav');
-        this.load.audio('sound_pick_power_up', 'power_up.wav');
+        this.load.audio('music_gameover', 'game_over.wav'); 
+        this.load.audio('music_game', 'overworld.mp3'); // DONE
+        this.load.audio('sound_jump', 'jump.wav'); //Done
+        this.load.audio('sound_pick_coin', 'pick_coin.wav'); // Done
+        this.load.audio('sound_pick_mushroom', 'pick_mushroom.wav'); //
+        this.load.audio('sound_pick_power_up', 'power_up.wav'); //
         this.load.audio('sound_spawn_power_up', 'power_up_appears.wav');
         this.load.audio('sound_ridingYoshi', 'riding_yoshi.wav');
-        this.load.audio('sound_spin_jump', 'spin_jump.wav');
+        this.load.audio('sound_spin_jump', 'spin_jump.wav'); //
         this.load.audio('sound_death', 'mario_death.mp3');
 
     }
@@ -111,28 +119,33 @@ class gameState extends Phaser.Scene {
         //temporal
         const uiScene = this.scene.get('UIScene');
         this.customEmiter = new Phaser.Events.EventEmitter();
-        this.loadAnimations();
-        this.generateMap();
-        // ?? touches dont move
-        // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
-        //  this.bg.setDepth(-50);
-        // this.bg.setScrollFactor(0);
 
+        this.imagenTemporal = this.add.image(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'bg_start');
+        this.imagenTemporal.setOrigin(0.5, 0.5);
 
-        this.mario = new mario(this, config.width * 0.2, config.height * .5);
-        this.generateGameElements();
-        this.cameras.main.startFollow(this.mario);
-        this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
-
-        this.backgroundGameMusic = this.sound.add('music_game', { loop: true });
-        this.timerEvent = this.time.addEvent({
-            delay: 100,  
-            callback: () => { this.backgroundGameMusic.play(); },  
-            callbackScope: this,
-            loop: false  
+        this.time.delayedCall(2000, () => {
+            this.imagenTemporal.destroy();
+            this.loadAnimations();
+            this.generateMap();
+            // ?? touches dont move
+            // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
+            //  this.bg.setDepth(-50);
+            // this.bg.setScrollFactor(0);
+            this.mario = new mario(this, config.width * 0.2, config.height * .5);
+            this.generateGameElements();
+            this.cameras.main.startFollow(this.mario);
+            this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
+    
+            this.backgroundGameMusic = this.sound.add('music_game', { loop: true });
+            this.timerEvent = this.time.addEvent({
+                delay: 100,  
+                callback: () => { this.backgroundGameMusic.play(); },  
+                callbackScope: this,
+                loop: false  
+            });
+    
+            this.createCollisions();
         });
-
-        this.createCollisions();
     }
 
     generateMap() {
@@ -164,6 +177,12 @@ class gameState extends Phaser.Scene {
             immovable: true,
         });
 
+        this.coinsGroup = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        })
+
+
         this.game_elements = this.map.getObjectLayer('game-elements');
         this.game_elements.objects.forEach(function (element) {
             // ID can be -> fruit, normal_coin, yoshi_coin
@@ -178,7 +197,7 @@ class gameState extends Phaser.Scene {
                     this.enemies.add(new koopa(this, element.x, element.y, 'redKoopa'));
                     break;
                 case "coin":
-                    this.object = new pickeableItem(this, element.x, element.y, "normal_coin", 'normalCoin');
+                    this.coinsGroup.add(new pickeableItem(this, element.x, element.y, "normal_coin", 'normalCoin'));
                     break;
                 case "coinsYoshi":
                     this.object = new pickeableItem(this, element.x, element.y, "yoshi_coin", 'yoshiCoin');
@@ -186,6 +205,18 @@ class gameState extends Phaser.Scene {
                 case "yellowBlock":
                     this.object = new pickeableItem(this, element.x, element.y, "eye_coin", 'eyeCoin')
                     break;
+                case "buttonP":
+                    const objectButton = {posX : element.x, posY: element.y, spriteTag: 'buttonP', frame : 0}
+                    this.object = new buttonPBlock(this, objectButton);
+                break;
+                case "cloud":
+                    const object = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
+                    this.object = new normalBlock(this, object);
+                break;
+                case "topoFloor":
+                break;
+                case "topoWall":
+                break;
             }
         }, this);
     }

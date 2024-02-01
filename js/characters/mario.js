@@ -23,20 +23,45 @@ class mario extends character
         //Yoshi variables
         this.isOnYoshi = false;
         this.isBigMario = false;
+        this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
     } 
+    getDamage(damage)
+    {
+        hp -= damage;
+        if(hp <= 0)
+        {
+            //Death -> animgame over onend gameover screen and menu
+        }
+        else if(hp == 1)
+        {
+            this.convertToSmallMario();
+        }
 
+    }
+
+    convertToSmallMario()
+    {
+        this.isBigMario = false;
+        this.setTexture('mario');
+        this.setFrame(0);
+        this.body.setSize(this.width * 0.5, this.height);
+        this.body.setOffset(0,0);
+    }
     convertToBigMario()
     {
-        //animacion mario big
         this.isBigMario = true;
+        this.hp = 2;
         const centroY = this.y + this.displayHeight * 0.4;
-    
         this.body.setSize(this.width, this.height);
-        this.body.setOffset(0, centroY - this.y);
+        this.body.setOffset(0, centroY - this.y);        
+        this.setTexture('marioBig');
+        this.setFrame(0);
     }
 
     jump()
     {
+        this.jumpSound.play();
+
         this.body.setVelocityY(gamePrefs.PLAYER_JUMP_FORCE);
         this.anims.stop();
         if(this.isBigMario)

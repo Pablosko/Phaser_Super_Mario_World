@@ -26,6 +26,10 @@ class pickeableItem extends Phaser.GameObjects.Sprite
             case "eye_coin":
                 this.areaZone.setSize(16, 16);
             break;
+            case "mushroom":
+                this.setFrame(2);
+                this.areaZone.setSize(16,16);
+            break;
             default:
                 this.areaZone.setSize(16, 16);
             break;
@@ -39,7 +43,17 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         this.object = id;
         this.body.setAllowGravity(false); 
         this.body.setImmovable(true);
+        this.setAudios();
     }
+
+    setAudios()
+    {
+        this.normalCoinSound = this.scene.sound.add('sound_pick_coin', { loop: false });
+        this.pickMushroom = this.scene.sound.add('sound_pick_mushroom', { loop: false });
+        this.pickPowerUp = this.scene.sound.add('sound_pick_power_up', { loop: false });
+
+    }
+
     setColliders()
     {
         this.scene.physics.add.overlap(
@@ -65,11 +79,13 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         {
             case "normal_coin":
                 this.scene.events.emit('addCoin', 1);
+                this.normalCoinSound.play();
                 this.areaZone.body.setEnable(false); 
                 this.destroy();
             break;
             case "yoshi_coin":
                 this.scene.events.emit('addYoshiCoin');
+                this.normalCoinSound.play();
                 this.areaZone.body.setEnable(false); 
                 this.destroy();
             break;     
@@ -84,6 +100,15 @@ class pickeableItem extends Phaser.GameObjects.Sprite
             break;
             case "eye_coin":
                 this.anims.play('eyeCoinImpact');
+            break;
+            case "mushroom":
+                this.pickMushroom.play();
+                if(!this.scene.mario.isBigMario)
+                {
+                    this.scene.mario.convertToBigMario();
+                }
+                this.areaZone.body.setEnable(false); 
+                this.destroy();
             break;
         }
     }

@@ -17,24 +17,26 @@ class uiScene extends Phaser.Scene
     }
     create()
     {
-        //Set variables
         this.currentYoshiCoins = 0;
         this.currentPoints = 0;
         this.currentCoins = 0;
         this.currentTime = 400;
 
-        this.base_ui = this.add.sprite(5, 0, 'baseUI').setOrigin(0, 0);
-        this.yoshiCoins = this.add.group();
-        this.createYoshiCoins();
-        this.createTexts();
-        this.createEvents();
-
-        this.timerEvent = this.time.addEvent({
-            delay: 1000,  
-            callback: this.updateTimer,  
-            callbackScope: this,
-            loop: true  
+        this.time.delayedCall(2300, () => {
+            this.base_ui = this.add.sprite(5, 0, 'baseUI').setOrigin(0, 0);
+            this.yoshiCoins = this.add.group();
+            this.createYoshiCoins();
+            this.createTexts();
+            this.createEvents();
+    
+            this.timerEvent = this.time.addEvent({
+                delay: 1000,  
+                callback: this.updateTimer,  
+                callbackScope: this,
+                loop: true  
+            });
         });
+        //Set variables
     }
 
     createYoshiCoins()

@@ -24,9 +24,9 @@ class menu extends Phaser.Scene
 
     create()
     {
+
         this.bg = this.add.sprite(0, 0, 'bg_black').setOrigin(0, 0);
         this.createTexts();
-
         this.backgroundMusic = this.sound.add('music_title', { loop: true });
         
         this.timerEvent = this.time.addEvent({
@@ -73,6 +73,7 @@ class menu extends Phaser.Scene
     cameraFade()
     {
         this.cameras.main.fadeOut(2000);
+        
         this.tweens.add({
             targets:  this.backgroundMusic,
             volume:   0,
