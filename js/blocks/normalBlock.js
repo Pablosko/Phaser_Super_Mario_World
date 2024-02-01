@@ -1,7 +1,7 @@
-class normalBlock extends Phaser.GameObjects.Sprite  {
+class normalBlock extends block {
     constructor(_scene, block)
     { //instanciar el objeto
-        super(_scene, block.posX, block.posY, block.spriteTag);
+        super(_scene, block);
         _scene.add.existing(this);
         this.scene = _scene;
         _scene.physics.world.enable(this);
@@ -13,28 +13,9 @@ class normalBlock extends Phaser.GameObjects.Sprite  {
         
     }
 
-    setCollider()
-    {
-        this.collider = this.scene.physics.add.collider
-        (
-            this,
-            this.scene.mario,
-            this.resetMarioJump,
-            null,
-            this
-        );
-    }
-
+   
     preUpdate(time,delta)
     {
         super.preUpdate(time, delta);
-    }
-
-    resetMarioJump()
-    {
-        this.scene.mario.currentJumpFrames = 0;
-        this.scene.mario.jumping = false;
-        this.scene.mario.spining = false;
-        this.scene.mario.body.checkCollision.up = false;
     }
 }

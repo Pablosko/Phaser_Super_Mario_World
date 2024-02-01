@@ -1,75 +1,66 @@
-class buttonPBlock extends Phaser.GameObjects.Sprite
+class buttonPBlock extends block
 {
     constructor(_scene, block)
     {
-        super(_scene, block.posX, block.posY, block.spriteTag);
-        _scene.add.existing(this);
-        this.scene = _scene;
-        _scene.physics.world.enable(this);
-        this.body.setImmovable(true);
-        this.body.setAllowGravity(false);
-
-        //Create Area Zone
-        this.areaZone = this.scene.add.zone(block.posX, block.posY);     
-        this.areaZone.setSize(16,16);
-        this.scene.physics.world.enable(this.areaZone);
-        this.areaZone.body.setImmovable();
-        this.areaZone.body.setAllowGravity(false);
-        this.areaZone.body.debugBodyColor = 0xffffff;
-        this.setZoneCollider();
-
+        super(_scene, block);
+        this.body.setAllowGravity(true);
+        this.body.setImmovable(false);
         this.setFrame(block.frame);
+        this.blocks = this.scene.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        });
+        this.pressed = false;
     }
-
-    setZoneCollider()
-    {
-        this.scene.physics.add.overlap(
-            this.scene.mario,
-            this.areaZone,
-            () => {
-                this.onTriggerEnter();
-            },
-            null,
-            this
-        );
-    }
-
     setCollider()
     {
+        super.setCollider();
         this.collider = this.scene.physics.add.collider
         (
             this,
-            this.scene.mario,
-            this.resetMarioJump,
-            null,
-            this
-        );
-
-        this.collider2 = this.scene.physics.add.collider
-        (
-            this,
             this.scene.walls,
-            this.cosa,
+            this.onCollideMario,
             null,
             this
         );
-
-        this.areaZone.body.setEnable(false); 
     }
 
-    onTriggerEnter()
+    onCollideFloor()
     {
-        this.setCollider();
-        this.body.setAllowGravity(true);
-    }
-    cosa()
-    {
+        super.onCollideFloor();
+        if(this.pressed)
+            return;
+        this.convertBlocks()
+        this.scene.time.delayedCall(5000, () => {
 
+            this.body.setEnable(true);
+            this.anims.stop();
+            this.setFrame(0);
+            this.convertToCoins();
+        });
     }
-
-    onJumpUp()
-    {
+    
+    convertBlocks() {
+        this.pressed = true;
         this.setFrame(1);
-        //convert coins into blocks
+        this.scene.coinsGroup.getChildren().forEach((element) => {
+            const data = { posX: element.x, posY: element.y, spriteTag: 'blocks', frame: 1 };
+            console.log(element.y);
+            this.blocks.add(new normalBlock(this.scene, data));
+            element.enable(false);
+        });
+    }
+    convertToCoins()
+    {
+        this.pressed = false;
+        this.setFrame(0);
+        this.blocks.getChildren().forEach(function (element) {
+
+            this.destroy(element)
+        });
+        this.scene.coinsGroup.getChildren().forEach(function (element) {
+
+            element.enable(true);
+        });
     }
 }

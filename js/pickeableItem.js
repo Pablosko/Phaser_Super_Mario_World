@@ -23,9 +23,6 @@ class pickeableItem extends Phaser.GameObjects.Sprite
                 this.anims.play('appleIdle');
                 this.areaZone.setSize(16,16);
             break;
-            case "eye_coin":
-                this.areaZone.setSize(16, 16);
-            break;
             case "mushroom":
                 this.setFrame(2);
                 this.areaZone.setSize(16,16);
@@ -51,7 +48,6 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         this.normalCoinSound = this.scene.sound.add('sound_pick_coin', { loop: false });
         this.pickMushroom = this.scene.sound.add('sound_pick_mushroom', { loop: false });
         this.pickPowerUp = this.scene.sound.add('sound_pick_power_up', { loop: false });
-
     }
 
     setColliders()
@@ -123,6 +119,11 @@ class pickeableItem extends Phaser.GameObjects.Sprite
                 this.destroy();
             break;
         }
+    }
+    enable(state)
+    {
+        this.areaZone.body.setEnable(state);
+        this.visible = state;
     }
 
 

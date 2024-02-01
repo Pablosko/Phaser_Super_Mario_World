@@ -526,6 +526,12 @@
                  "id":123,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"lootBlock",
                  "visible":true,
@@ -538,6 +544,12 @@
                  "id":124,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"lootBlock",
                  "visible":true,
@@ -550,6 +562,12 @@
                  "id":125,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"lootBlock",
                  "visible":true,
@@ -562,6 +580,12 @@
                  "id":126,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"egg"
+                        }],
                  "rotation":0,
                  "type":"lootBlock",
                  "visible":true,
@@ -574,6 +598,12 @@
                  "id":127,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"lootBlock",
                  "visible":true,
@@ -586,6 +616,12 @@
                  "id":128,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"mushroom"
+                        }],
                  "rotation":0,
                  "type":"lootBlock",
                  "visible":true,
@@ -598,6 +634,12 @@
                  "id":129,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "type":"lootBlock",
                  "visible":true,
@@ -962,7 +1004,7 @@
                  "type":"coinsYoshi",
                  "visible":true,
                  "width":0,
-                 "x":2344.045,
+                 "x":2344.05,
                  "y":240.375
                 }, 
                 {
@@ -1006,6 +1048,12 @@
                  "id":169,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"plant"
+                        }],
                  "rotation":0,
                  "type":"yellowBlock",
                  "visible":true,
@@ -1454,7 +1502,7 @@
                  "type":"topoFloor",
                  "visible":true,
                  "width":0,
-                 "x":3960.045,
+                 "x":3960.05,
                  "y":378.417
                 }, 
                 {
@@ -1516,6 +1564,114 @@
                  "width":0,
                  "x":4520,
                  "y":281
+                }, 
+                {
+                 "height":0,
+                 "id":215,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "type":"lootBlock",
+                 "visible":true,
+                 "width":0,
+                 "x":201,
+                 "y":345
+                }, 
+                {
+                 "height":0,
+                 "id":216,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"egg"
+                        }],
+                 "rotation":0,
+                 "type":"lootBlock",
+                 "visible":true,
+                 "width":0,
+                 "x":216,
+                 "y":345
+                }, 
+                {
+                 "height":0,
+                 "id":217,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"yellowBlock",
+                 "visible":true,
+                 "width":0,
+                 "x":264.25,
+                 "y":345.375
+                }, 
+                {
+                 "height":0,
+                 "id":218,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"buttonP",
+                 "visible":true,
+                 "width":0,
+                 "x":264,
+                 "y":329.375
+                }, 
+                {
+                 "height":0,
+                 "id":219,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"mushroom"
+                        }],
+                 "rotation":0,
+                 "type":"lootBlock",
+                 "visible":true,
+                 "width":0,
+                 "x":232,
+                 "y":345
+                }, 
+                {
+                 "height":0,
+                 "id":220,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"yellowBlock",
+                 "visible":true,
+                 "width":0,
+                 "x":71.1799999999998,
+                 "y":335.5
+                }, 
+                {
+                 "height":0,
+                 "id":221,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"content",
+                         "type":"string",
+                         "value":"plant"
+                        }],
+                 "rotation":0,
+                 "type":"yellowBlock",
+                 "visible":true,
+                 "width":0,
+                 "x":87,
+                 "y":335.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1524,7 +1680,7 @@
          "y":0
         }],
  "nextlayerid":22,
- "nextobjectid":215,
+ "nextobjectid":222,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

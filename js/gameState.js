@@ -131,7 +131,7 @@ class gameState extends Phaser.Scene {
             // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
             //  this.bg.setDepth(-50);
             // this.bg.setScrollFactor(0);
-            this.mario = new mario(this, config.width * 0.2, config.height * .5);
+            this.mario = new mario(this,4000, config.height * .8);
             this.generateGameElements();
             this.cameras.main.startFollow(this.mario);
             this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
@@ -173,6 +173,10 @@ class gameState extends Phaser.Scene {
             immovable: true,
             allowGravity: false
         });
+        this.allBlocks = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        });
         this.enemies = this.physics.add.group({
             immovable: true,
         });
@@ -186,9 +190,13 @@ class gameState extends Phaser.Scene {
         this.game_elements = this.map.getObjectLayer('game-elements');
         this.game_elements.objects.forEach(function (element) {
             // ID can be -> fruit, normal_coin, yoshi_coin
+            this.data = {};
             switch (element.type) {
+
                 case "lootBlock":
-                    this.lootBlocks.add(new lootBlock(this, element.x, element.y));
+                    this.data = {posX : element.x, posY: element.y, spriteTag: 'lootBlock', content: element.properties}
+                    this.lootBlocks.add(new lootBlock(this, this.data));
+                    this.allBlocks.add(this.object);
                     break;
                 case "fruit":
                     this.object = new pickeableItem(this, element.x, element.y, "fruit", 'apple');
@@ -203,15 +211,19 @@ class gameState extends Phaser.Scene {
                     this.object = new pickeableItem(this, element.x, element.y, "yoshi_coin", 'yoshiCoin');
                     break;
                 case "yellowBlock":
-                    this.object = new pickeableItem(this, element.x, element.y, "eye_coin", 'eyeCoin')
+                    this.data = {posX : element.x, posY: element.y, spriteTag: 'eyeCoin', content: element.properties}
+                    this.object = new yellowEyeBlock(this,  this.data);
+                    this.allBlocks.add(this.object);
                     break;
                 case "buttonP":
-                    const objectButton = {posX : element.x, posY: element.y, spriteTag: 'buttonP', frame : 0}
-                    this.object = new buttonPBlock(this, objectButton);
+                    this.data = {posX : element.x, posY: element.y, spriteTag: 'buttonP', frame : 0}
+                    this.object = new buttonPBlock(this,  this.data);
+                    this.allBlocks.add(  this.object);
                 break;
                 case "cloud":
-                    const object = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
-                    this.object = new normalBlock(this, object);
+                    this.data = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
+                    this.object = new normalBlock(this,  this.data);
+                    this.allBlocks.add(this.object);
                 break;
                 case "topoFloor":
                   //  const objectTopo = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
