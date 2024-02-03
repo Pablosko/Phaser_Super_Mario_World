@@ -4,14 +4,23 @@ class rugby extends enemy {
         this.anims.play('runRugby')
         this.type = _type;
         this.hp = 3;
-        this.canMove = true;
+        this.canMove = false;
         this.canChangeDirection = true;
         this.crouched = false;
         this.dead = false;
+
+        this.enableObject = false;
+
+        this.areaZone = this.scene.add.zone(_posX, _posY);     
+        this.areaZone.setSize(521, 256);
+        this.scene.physics.world.enable(this.areaZone);
+        this.areaZone.body.setImmovable();
+        this.areaZone.body.setAllowGravity(false);
+        this.setColliders();
         this.timerEvent = this.scene.time.addEvent({
             delay: 3000,  
             callback: () => { 
-                if(this.canChangeDirection)
+                if(this.canChangeDirection && this.enableObject)
                 {
                     this.changeDirection();
                 }
@@ -52,10 +61,19 @@ class rugby extends enemy {
     setColliders()
     {
         super.setColliders()
-        this.scene.physics.add.collider
-        (
-            this.character,
-            this.scene.enemies,
+
+        this.scene.physics.add.overlap(
+            this.scene.mario,
+            this.areaZone,
+            () => {
+                if(!this.enableObject)
+                {
+                    this.canMove = true;
+                    this.enableObject = true;
+                }
+            },
+            null,
+            this
         );
     }
 
@@ -68,7 +86,6 @@ class rugby extends enemy {
             this.body.setVelocityX(-40 * this.pathDirection);
         }
         else {
-            // Detener el objeto
             this.body.setVelocityX(0);
         }
     }

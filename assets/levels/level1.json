@@ -1696,18 +1696,6 @@
                  "width":0,
                  "x":328.30303030303,
                  "y":298.848484848485
-                }, 
-                {
-                 "height":0,
-                 "id":224,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"enemyRugby",
-                 "visible":true,
-                 "width":0,
-                 "x":396,
-                 "y":372
                 }],
          "opacity":1,
          "type":"objectgroup",
