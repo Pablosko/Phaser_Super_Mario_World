@@ -5,10 +5,15 @@ class gameState extends Phaser.Scene {
 
     preload() {
         this.cameras.main.setBackgroundColor("112");
-        this.load.setPath('assets/img');
-        this.load.image('bg', 'backgrounds/background_level1.png');
-        this.load.image('bg_start', 'backgrounds/bg_mariostart.png')
-        this.load.image('bg_gameover', 'backgrounds/bg_gameover.png');
+        //this.load.setPath('assets/img');
+        this.load.setPath('assets/img/backgrounds');
+
+        this.load.image('bg', 'background_level1.png');
+        this.load.image('bg_start', 'bg_mariostart.png');
+        this.load.image('bg_gameover', 'bg_gameover.png');
+
+        this.load.image('bg_go_timeup', 'bg_gameover_timeup.png');
+
         //Koopa Loads
 
         this.loadEnemiesSprites();
@@ -367,5 +372,24 @@ class gameState extends Phaser.Scene {
         this.enemies.add(this.newKoopa);
     }
     update() {
+    }
+
+    showGameOverMenu(isTime)
+    {
+        this.cameras.main.fadeIn(500);
+
+        if(isTime)
+        {
+            this.bg_lose = this.add.image(this.width * 0.5, this.height * 0.5, 'bg_go_timeup');
+        }
+        else{
+            this.bg_lose = this.add.image(this.width * 0.5, this.height * 0.5, 'bg_gameover');
+        }
+        this.time.delayedCall(1500, function () {
+            this.scene.stop('UIScene');
+            this.scene.stop('main_scene');
+            this.scene.start('menu');
+        }, [], this);
+        
     }
 }
