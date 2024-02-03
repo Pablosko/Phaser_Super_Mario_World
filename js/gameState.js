@@ -172,6 +172,7 @@ class gameState extends Phaser.Scene {
             immovable: true,
             allowGravity: false
         });
+        this.pBlock;
         this.enemies = this.physics.add.group({
             immovable: true,
         });
@@ -180,7 +181,6 @@ class gameState extends Phaser.Scene {
             immovable: true,
             allowGravity: false
         })
-
 
         this.game_elements = this.map.getObjectLayer('game-elements');
         this.game_elements.objects.forEach(function (element) {
@@ -212,8 +212,7 @@ class gameState extends Phaser.Scene {
                     break;
                 case "buttonP":
                     this.data = { posX: element.x, posY: element.y, spriteTag: 'buttonP', frame: 0 }
-                    this.object = new buttonPBlock(this, this.data);
-                    this.allBlocks.add(this.object);
+                    this.pBlock = new buttonPBlock(this, this.data);
                     break;
                 case "cloud":
                     this.data = { posX: element.x, posY: element.y, spriteTag: 'blocks', frame: 3 }
@@ -232,12 +231,14 @@ class gameState extends Phaser.Scene {
 
     createCollisions() {
         this.physics.add.collider(this.mario, this.lootBlocks, (_mario, _block) => { this.mario.OnWallCollide(_mario, _block) }, null, this);
+        this.physics.add.collider(this.pBlock, this.allBlocks, (_mario, _block) => { console.log("dsadsa") }, null, this);
         this.physics.add.collider(this.enemies, this.walls, (_enemie, _wall) => { }, null, this);
         this.colliderMarioEnemies = this.physics.add.collider(this.mario, this.enemies, (_mario, _enemie) => {
             _mario.CollideWithEnemie(_mario, _enemie);
             _enemie.CollideWithPlayer(_enemie, _mario);
         }, null, this);
         this.physics.add.collider(this.enemies, this.enemies, (_enemie1, _enemie2) => { _enemie1.collideWithEnemie(_enemie1, _enemie2) }, null, this);
+
     }
 
     loadAnimations() {

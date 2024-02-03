@@ -3,26 +3,29 @@ class buttonPBlock extends block
     constructor(_scene, block)
     {
         super(_scene, block);
-        this.body.setAllowGravity(true);
-        this.body.setImmovable(false);
         this.setFrame(block.frame);
         this.blocks = this.scene.physics.add.group({
             immovable: true,
             allowGravity: false
         });
         this.pressed = false;
+        this.body.setAllowGravity(true);
+        this.body.immovable = false;
+        this.colliding = false;
     }
     setCollider()
     {
         super.setCollider();
-        this.collider = this.scene.physics.add.collider
+        this.collider2 = this.scene.physics.add.collider
         (
             this,
             this.scene.walls,
-            this.onCollideMario,
+            () => { this.body.immovable = true;},
             null,
             this
         );
+     
+      
     }
 
     onCollideFloor()
@@ -30,8 +33,14 @@ class buttonPBlock extends block
         super.onCollideFloor();
         if(this.pressed)
             return;
+        this.setFrame(1);
         this.convertBlocks()
-        this.scene.time.delayedCall(5000, () => {
+        this.body.enable =false;
+        this.collider.active = false;
+        this.scene.time.delayedCall(250, () => {
+            this.setVisible(false);
+        });
+        this.scene.time.delayedCall(1000, () => {
 
             this.body.setEnable(true);
             this.anims.stop();
@@ -42,7 +51,6 @@ class buttonPBlock extends block
     
     convertBlocks() {
         this.pressed = true;
-        this.setFrame(1);
         this.scene.coinsGroup.getChildren().forEach((element) => {
             const data = { posX: element.x, posY: element.y, spriteTag: 'blocks', frame: 1 };
             console.log(element.y);
@@ -50,19 +58,19 @@ class buttonPBlock extends block
             element.enable(false);
         });
     }
-    convertToCoins()
-    {
-        this.pressed = false;
+    convertToCoins() {
         this.setFrame(0);
 
-        this.blocks.getChildren().forEach((element) => {
-            this.destroy(element);
-        });
+        // Destruir todos los elementos dentro del grupo 'blocks'
+        this.blocks.clear(true, true);
 
         if (this.scene && this.scene.coinsGroup) {
             this.scene.coinsGroup.getChildren().forEach((element) => {
                 element.enable(true);
             });
         }
+    }
+    preUpdate(time,delta)
+    {
     }
 }
