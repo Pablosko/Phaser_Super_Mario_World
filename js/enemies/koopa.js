@@ -27,6 +27,11 @@ class koopa extends enemy
         if(this.canMove && !this.isShell)
             this.body.setVelocityX(-20 * this.pathDirection);
     }
+    canDealDamage()
+    {
+        return super.canDealDamage() && !this.isShell;
+    }
+
     CollideWithPlayer(enemie,player)
     {
         if(enemie.body ==undefined)
@@ -120,14 +125,10 @@ class koopa extends enemy
 
     collideWithEnemie(enemie1,enemie2)
     {
-        super.collideWithEnemie(enemie1,enemie2)
-        
+        super.collideWithEnemie(enemie1,enemie2)        
         
         if(enemie1.isShell && enemie1.body.velocity.x != 0)
         {
-            console.log(enemie1.body.velocity)
-            console.log(enemie2)
-            console.log("kill koopa")
             enemie2.getDamage(2000,enemie1);            
         }
     }

@@ -49,7 +49,6 @@ class mario extends character
         this.setTexture('mario');
         this.setFrame(0);
         this.body.setSize(this.width * 0.5, this.height);
-        this.body.setOffset(0,0);
     }
     convertToBigMario()
     {
@@ -136,10 +135,10 @@ class mario extends character
             _enemie.getDamage(1,_mario.body);
             _mario.jump();
         }
-        if(!_mario.body.touching.down && !_enemie.body.touching.up)
+        if(!_mario.body.touching.down && !_enemie.body.touching.up && _enemie.canDealDamage())
         {
             this.scene.mario.getDamage(1);
-        }
+        }        
     }
     OnWallCollide(_mario,_block)
     {
