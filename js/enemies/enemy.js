@@ -10,9 +10,15 @@ class enemy extends character
     preUpdate(time,delta)
     {
         super.preUpdate(time, delta);
+        this.flipSprite();
+    }
+
+    flipSprite()
+    {
         this.flipX = this.body.velocity.x > 0;
 
     }
+
     collideWithEnemie(enemie1,enemie2)
     {
         this.pathDirection *= -1;
@@ -21,6 +27,12 @@ class enemy extends character
     {
         
     }
+
+    canDealDamage()
+    {
+        return true;
+    }
+
     isVulnerable()
     {
         return true;

@@ -5,10 +5,15 @@ class gameState extends Phaser.Scene {
 
     preload() {
         this.cameras.main.setBackgroundColor("112");
-        this.load.setPath('assets/img');
-        this.load.image('bg', 'backgrounds/background_level1.png');
-        this.load.image('bg_start', 'backgrounds/bg_mariostart.png')
-        this.load.image('bg_gameover', 'backgrounds/bg_gameover.png');
+        //this.load.setPath('assets/img');
+        this.load.setPath('assets/img/backgrounds');
+
+        this.load.image('bg', 'background_level1.png');
+        this.load.image('bg_start', 'bg_mariostart.png');
+        this.load.image('bg_gameover', 'bg_gameover.png');
+
+        this.load.image('bg_go_timeup', 'bg_gameover_timeup.png');
+
         //Koopa Loads
 
         this.loadEnemiesSprites();
@@ -42,6 +47,7 @@ class gameState extends Phaser.Scene {
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('topo', 'mole.png',
             { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('rugby', 'rugby_enemy.png', { frameWidth: 26, frameHeight: 27 });
     }
 
     loadObjectsSprites() {
@@ -225,13 +231,19 @@ class gameState extends Phaser.Scene {
                     break;
                 case "topoWall":
                     break;
+                case "koopa":
+                    //create little kopa
+                    break;
+                case "enemyRugby":
+                    this.enemies.add(new rugby(this, element.x, element.y, "rugbyEnemy"));
+                break;
             }
         }, this);
     }
 
     createCollisions() {
         this.physics.add.collider(this.mario, this.lootBlocks, (_mario, _block) => { this.mario.OnWallCollide(_mario, _block) }, null, this);
-        this.physics.add.collider(this.pBlock, this.allBlocks, (_mario, _block) => { console.log("dsadsa") }, null, this);
+        this.physics.add.collider(this.pBlock, this.allBlocks, (_mario, _block) => {  }, null, this);
         this.physics.add.collider(this.enemies, this.walls, (_enemie, _wall) => { }, null, this);
         this.colliderMarioEnemies = this.physics.add.collider(this.mario, this.enemies, (_mario, _enemie) => {
             _mario.CollideWithEnemie(_mario, _enemie);
@@ -245,6 +257,7 @@ class gameState extends Phaser.Scene {
         this.loadYoshiAnimations();
         this.loadKoopaAnimations();
         this.loadMoleAnimations();
+        this.loadRugbyAnimations();
         //Misc animations
 
         this.anims.create(
@@ -286,6 +299,38 @@ class gameState extends Phaser.Scene {
 
     loadYoshiAnimations() {
 
+    }
+
+    loadRugbyAnimations()
+    {
+        this.anims.create(
+            {
+                key: 'runRugby',
+                frames: this.anims.generateFrameNumbers('rugby', { start: 0, end: 1 }),
+                frameRate: 24,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'lookAroundCrouched',
+                frames: this.anims.generateFrameNumbers('rugby', { start: 2, end: 4 }),
+                frameRate: 11,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'hitCrouch',
+                frames: this.anims.generateFrameNumbers('rugby', { start: 6, end: 7 }),
+                frameRate: 11,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'crouchBounceHead',
+                frames: this.anims.generateFrameNumbers('rugby', { start: 8, end: 10 }),
+                frameRate: 11,
+                repeat: -1
+            });
     }
 
     loadMoleAnimations() {
@@ -367,5 +412,24 @@ class gameState extends Phaser.Scene {
         this.enemies.add(this.newKoopa);
     }
     update() {
+    }
+
+    showGameOverMenu(isTime)
+    {
+        this.cameras.main.fadeIn(500);
+
+        if(isTime)
+        {
+            this.bg_lose = this.add.image(this.width * 0.5, this.height * 0.5, 'bg_go_timeup');
+        }
+        else{
+            this.bg_lose = this.add.image(this.width * 0.5, this.height * 0.5, 'bg_gameover');
+        }
+        this.time.delayedCall(1500, function () {
+            this.scene.stop('UIScene');
+            this.scene.stop('main_scene');
+            this.scene.start('menu');
+        }, [], this);
+        
     }
 }

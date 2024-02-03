@@ -24,6 +24,8 @@ class mario extends character
         this.isOnYoshi = false;
         this.isBigMario = false;
         this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
+        // this.scene.load.image('bg_gameover', 'backgrounds/bg_gameover.png');
+
     } 
     getDamage(damage)
     {
@@ -47,7 +49,6 @@ class mario extends character
         this.setTexture('mario');
         this.setFrame(0);
         this.body.setSize(this.width * 0.5, this.height);
-        this.body.setOffset(0,0);
     }
     convertToBigMario()
     {
@@ -77,7 +78,7 @@ class mario extends character
         });
 
         this.scene.cameras.main.once('camerafadeoutcomplete', () => { 
-          //  this.bg_gmover = this.add.sprite(0, 0, 'bg_gameover').setOrigin(0, 0); 
+            this.scene.showGameOverMenu(false);            
         
         });
 
@@ -134,6 +135,10 @@ class mario extends character
             _enemie.getDamage(1,_mario.body);
             _mario.jump();
         }
+        if(!_mario.body.touching.down && !_enemie.body.touching.up && _enemie.canDealDamage())
+        {
+            this.scene.mario.getDamage(1);
+        }        
     }
     OnWallCollide(_mario,_block)
     {
