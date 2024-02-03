@@ -18,7 +18,7 @@ var config =
     type: Phaser.AUTO,
     width: 256,
     height: 256,
-    scene:[ menu, gameState, uiScene ], //array con las escenas
+    scene:[ menu, gameState, uiScene  ], //array con las escenas
     render:
     {
         pixelArt:true
@@ -33,7 +33,7 @@ var config =
         default:'arcade',
         arcade:
         {
-           // debug:true,
+            debug:true,
             gravity:{y:9.81 * 75}
         },
     }

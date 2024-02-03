@@ -8,6 +8,7 @@ class gameState extends Phaser.Scene {
         this.load.setPath('assets/img');
         this.load.image('bg', 'backgrounds/background_level1.png');
         this.load.image('bg_start', 'backgrounds/bg_mariostart.png')
+        this.load.image('bg_gameover', 'backgrounds/bg_gameover.png');
         //Koopa Loads
 
         this.loadEnemiesSprites();
@@ -118,7 +119,7 @@ class gameState extends Phaser.Scene {
         this.imagenTemporal = this.add.image(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'bg_start');
         this.imagenTemporal.setOrigin(0.5, 0.5);
 
-        this.time.delayedCall(2000, () => {
+        this.time.delayedCall(150, () => {
             this.imagenTemporal.destroy();
             this.loadAnimations();
             this.generateMap();
@@ -126,7 +127,7 @@ class gameState extends Phaser.Scene {
              this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
              this.bg.setDepth(-50);
              this.bg.setScrollFactor(0);
-            this.mario = new mario(this, 1000, config.height * .8);
+            this.mario = new mario(this, config.width * .2, config.height * .8);
             this.generateGameElements();
             this.cameras.main.startFollow(this.mario);
             this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
@@ -232,7 +233,7 @@ class gameState extends Phaser.Scene {
     createCollisions() {
         this.physics.add.collider(this.mario, this.lootBlocks, (_mario, _block) => { this.mario.OnWallCollide(_mario, _block) }, null, this);
         this.physics.add.collider(this.enemies, this.walls, (_enemie, _wall) => { }, null, this);
-        this.physics.add.collider(this.mario, this.enemies, (_mario, _enemie) => {
+        this.colliderMarioEnemies = this.physics.add.collider(this.mario, this.enemies, (_mario, _enemie) => {
             _mario.CollideWithEnemie(_mario, _enemie);
             _enemie.CollideWithPlayer(_enemie, _mario);
         }, null, this);

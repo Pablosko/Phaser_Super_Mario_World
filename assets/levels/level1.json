@@ -1610,7 +1610,7 @@
                  "type":"yellowBlock",
                  "visible":true,
                  "width":0,
-                 "x":264.25,
+                 "x":264,
                  "y":345.375
                 }, 
                 {
@@ -1652,7 +1652,7 @@
                  "type":"yellowBlock",
                  "visible":true,
                  "width":0,
-                 "x":71.1799999999998,
+                 "x":71.18,
                  "y":335.5
                 }, 
                 {
@@ -1672,6 +1672,30 @@
                  "width":0,
                  "x":87,
                  "y":335.5
+                }, 
+                {
+                 "height":0,
+                 "id":222,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"coin",
+                 "visible":true,
+                 "width":0,
+                 "x":312.30303030303,
+                 "y":313.848484848485
+                }, 
+                {
+                 "height":0,
+                 "id":223,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"coin",
+                 "visible":true,
+                 "width":0,
+                 "x":328.30303030303,
+                 "y":298.848484848485
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1680,7 +1704,7 @@
          "y":0
         }],
  "nextlayerid":22,
- "nextobjectid":222,
+ "nextobjectid":224,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

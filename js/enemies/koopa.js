@@ -40,6 +40,7 @@ class koopa extends enemy
         }else
         {
             //mario get damage
+            this.scene.mario.getDamage(1);
         }
     }
     trowShell(dir)

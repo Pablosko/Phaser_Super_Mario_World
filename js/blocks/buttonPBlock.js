@@ -54,13 +54,15 @@ class buttonPBlock extends block
     {
         this.pressed = false;
         this.setFrame(0);
-        this.blocks.getChildren().forEach(function (element) {
 
-            this.destroy(element)
+        this.blocks.getChildren().forEach((element) => {
+            this.destroy(element);
         });
-        this.scene.coinsGroup.getChildren().forEach(function (element) {
 
-            element.enable(true);
-        });
+        if (this.scene && this.scene.coinsGroup) {
+            this.scene.coinsGroup.getChildren().forEach((element) => {
+                element.enable(true);
+            });
+        }
     }
 }

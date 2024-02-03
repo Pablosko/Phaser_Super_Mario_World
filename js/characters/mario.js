@@ -19,7 +19,7 @@ class mario extends character
         this.runkey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);  
         this.body.setSize(this.width * 0.5, this.height);
         this.hp = 1;
-
+        this.dead = false;
         //Yoshi variables
         this.isOnYoshi = false;
         this.isBigMario = false;
@@ -27,12 +27,14 @@ class mario extends character
     } 
     getDamage(damage)
     {
-        hp -= damage;
-        if(hp <= 0)
+        this.hp -= damage;
+        if(this.hp <= 0)
         {
+            this.dead= true;
             //Death -> animgame over onend gameover screen and menu
+            this.onDie();
         }
-        else if(hp == 1)
+        else if(this.hp == 1)
         {
             this.convertToSmallMario();
         }
@@ -56,6 +58,29 @@ class mario extends character
         this.body.setOffset(0, centroY - this.y);        
         this.setTexture('marioBig');
         this.setFrame(0);
+    }
+    onDie()
+    {
+        this.setTexture('marioDeath');
+
+        this.scene.cameras.main.fadeOut(2000);
+        this.scene.colliderMarioEnemies.active = false;
+        this.scene.tweens.add({
+            targets: this,
+            y: this.y - 120, 
+            duration: 1000,
+            ease: 'Linear', 
+            onComplete: () => {
+                this.collider.active = false;
+                this.collider2.active = false;
+            }
+        });
+
+        this.scene.cameras.main.once('camerafadeoutcomplete', () => { 
+          //  this.bg_gmover = this.add.sprite(0, 0, 'bg_gameover').setOrigin(0, 0); 
+        
+        });
+
     }
 
     jump()
@@ -122,6 +147,9 @@ class mario extends character
     }
     preUpdate(time,delta)
     {
+        if(this.dead)
+            return;
+
         this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;
         this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.8;
         if(this.cursores.left.isDown)
@@ -224,7 +252,7 @@ class mario extends character
            0 -> IDLE 1 -> LOOK_UP 2 -> DUCK 3 al 5 -> WALK 6 al 8 -> RUN 9 -> SKID  10 -> PIPE 11 -> JUMP  12 -> FALL 13 -> RUN JUMP 14 al 17 -> SPIN JUMP 18 -> SLIDe 19 -> KICK
           20 al 22 -> SWIM 23 VICTORY
           */
-         
+        
         this.anims.create(
             {
                 key: 'walk',
