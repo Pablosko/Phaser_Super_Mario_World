@@ -1,5 +1,5 @@
 
-class mushroomPickeable extends pickeableItem 
+class yoshi extends pickeableItem 
 {
     constructor(_scene, posX, posY, id, _spriteTag)
     {
@@ -58,6 +58,7 @@ class mushroomPickeable extends pickeableItem
             this
         );
     }
+
 
     cosa()
     {

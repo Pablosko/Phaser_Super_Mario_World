@@ -104,7 +104,6 @@ class pickeableItem extends Phaser.GameObjects.Sprite
                     this.areaZone.body.setEnable(false);
                     this.destroy();
                 }
-                //Si esta en yoshi y yoshi != comiendo
             break;
             case "eye_coin":
                 this.anims.play('eyeCoinImpact');
