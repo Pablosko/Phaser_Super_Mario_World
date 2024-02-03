@@ -14,7 +14,7 @@ class mushroomPickeable extends pickeableItem
     preUpdate(time, delta)
     {
         super.preUpdate(time, delta);
-        this.x += .2;
+        this.x += .5;
         this.areaZone.x = this.x;
         this.areaZone.y = this.y;
     }

@@ -11,7 +11,7 @@ class gameState extends Phaser.Scene {
         //Koopa Loads
 
         this.loadEnemiesSprites();
-        this.loadMarioSprites();        
+        this.loadMarioSprites();
         this.loadObjectsSprites();
         this.loadYoshiSprites();
         this.loadTileSets();
@@ -31,8 +31,7 @@ class gameState extends Phaser.Scene {
         this.loadAudios();
     }
 
-    loadEnemiesSprites()
-    {
+    loadEnemiesSprites() {
         this.load.setPath('assets/img/enemies')
         this.load.spritesheet('koopa', 'enemy_koopa_16x32.png',
             { frameWidth: 16, frameHeight: 32 });
@@ -40,12 +39,11 @@ class gameState extends Phaser.Scene {
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('koopaShell', 'enemy_bullet_16x16.png',
             { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('mole', 'mole.png', 
+        this.load.spritesheet('topo', 'mole.png',
             { frameWidth: 16, frameHeight: 16 });
     }
 
-    loadObjectsSprites()
-    {
+    loadObjectsSprites() {
         this.load.setPath('assets/img/objects');
         this.load.spritesheet('yoshiCoin', 'coin_yoshi.png',
             { frameWidth: 16, frameHeight: 25 });
@@ -55,43 +53,41 @@ class gameState extends Phaser.Scene {
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('apple', 'apple.png',
             { frameWidth: 14, frameHeight: 13 });
-        this.load.spritesheet('eyeCoin', 'eyecoin.png', 
+        this.load.spritesheet('eyeCoin', 'eyecoin.png',
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('lootBlock', 'lootBlock.png',
             { frameWidth: 16, frameHeight: 16 });
 
     }
 
-    loadMarioSprites()
-    {
+    loadMarioSprites() {
         this.load.setPath('assets/img/mario');
         this.load.spritesheet('mario', 'little_mario.png', { frameWidth: 16, frameHeight: 22 });
         this.load.spritesheet('marioBig', 'bigmario_normal.png', { frameWidth: 16, frameHeight: 31 });
         this.load.spritesheet('marioBigRun', 'mariobig_run.png', { frameWidth: 18, frameHeight: 31 });
         this.load.spritesheet('marioBigRidingYoshi', 'mariobig_ridingYoshi.png', { frameWidth: 16, frameHeight: 22 });
         this.load.spritesheet('marioRidingYoshi', 'mariomini_ridingYoshi.png', { frameWidth: 16, frameHeight: 21 });
-        this.load.spritesheet('growMario', 'grow_mario.png', { frameWidth: 16, frameHeight: 31 } );
+        this.load.spritesheet('growMario', 'grow_mario.png', { frameWidth: 16, frameHeight: 31 });
+        this.load.image('marioDeath', 'mario_death.png');
     }
 
-    loadYoshiSprites()
-    {
+    loadYoshiSprites() {
         this.load.setPath('assets/img/yoshi');
-        this.load.spritesheet('eggExplosion', 'egg_explosion.png', 
-        { frameWidth: 18, frameHeight: 19 });
-        this.load.spritesheet('egg', 'yoshi_eggs.png', 
-        { frameWidth: 14, frameHeight: 16 });
-        this.load.spritesheet('yoshiSpawn', 'yoshi_spawn.png', 
-        { frameWidth: 26, frameHeight: 32 });
-        this.load.spritesheet('yoshiSprites', 'yoshi_sprites.png', 
-        { frameWidth: 26, frameHeight: 32 });
-        this.load.spritesheet('yoshiTongue', 'yoshi_tongue.png', 
-        { frameWidth: 48, frameHeight: 32 });
-        this.load.spritesheet('yoshiWalks', 'yoshi_walking.png', 
-        { frameWidth: 26, frameHeight: 32 });
+        this.load.spritesheet('eggExplosion', 'egg_explosion.png',
+            { frameWidth: 18, frameHeight: 19 });
+        this.load.spritesheet('egg', 'yoshi_eggs.png',
+            { frameWidth: 14, frameHeight: 16 });
+        this.load.spritesheet('yoshiSpawn', 'yoshi_spawn.png',
+            { frameWidth: 26, frameHeight: 32 });
+        this.load.spritesheet('yoshiSprites', 'yoshi_sprites.png',
+            { frameWidth: 26, frameHeight: 32 });
+        this.load.spritesheet('yoshiTongue', 'yoshi_tongue.png',
+            { frameWidth: 48, frameHeight: 32 });
+        this.load.spritesheet('yoshiWalks', 'yoshi_walking.png',
+            { frameWidth: 26, frameHeight: 32 });
     }
 
-    loadTileSets()
-    {
+    loadTileSets() {
         this.load.setPath('assets/img/tilesets');
         this.load.image('tileset_ground', 'floor_tileset.png');
         this.load.image('tileset_pipes', 'pipes_tileset.png');
@@ -99,10 +95,9 @@ class gameState extends Phaser.Scene {
         this.load.image('tileset_arbusto', 'arbusto_big.png');
     }
 
-    loadAudios()
-    {
+    loadAudios() {
         this.load.setPath('assets/sounds');
-        this.load.audio('music_gameover', 'game_over.wav'); 
+        this.load.audio('music_gameover', 'game_over.wav');
         this.load.audio('music_game', 'overworld.mp3'); // DONE
         this.load.audio('sound_jump', 'jump.wav'); //Done
         this.load.audio('sound_pick_coin', 'pick_coin.wav'); // Done
@@ -128,22 +123,22 @@ class gameState extends Phaser.Scene {
             this.loadAnimations();
             this.generateMap();
             // ?? touches dont move
-            // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
-            //  this.bg.setDepth(-50);
-            // this.bg.setScrollFactor(0);
-            this.mario = new mario(this,4000, config.height * .8);
+             this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
+             this.bg.setDepth(-50);
+             this.bg.setScrollFactor(0);
+            this.mario = new mario(this, 1000, config.height * .8);
             this.generateGameElements();
             this.cameras.main.startFollow(this.mario);
             this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
-    
+
             this.backgroundGameMusic = this.sound.add('music_game', { loop: true });
             this.timerEvent = this.time.addEvent({
-                delay: 100,  
-                callback: () => { this.backgroundGameMusic.play(); },  
+                delay: 100,
+                callback: () => { this.backgroundGameMusic.play(); },
                 callbackScope: this,
-                loop: false  
+                loop: false
             });
-    
+
             this.createCollisions();
         });
     }
@@ -158,10 +153,9 @@ class gameState extends Phaser.Scene {
         //Pinto las CAPAS/LAYERS
         this.walls = this.map.createLayer('layer_ground', 'tileset_ground');
         this.pipes = this.map.createLayer('layer_pipes', 'tileset_pipes');
-        this.map.createLayer('layer_vegetation', 'tileset_vegetation');
         this.map.createLayer('layer_plantas', 'tileset_ground');
         this.map.createLayer('layer_vegetation_back', 'tileset_arbusto');
-
+        this.vege = this.map.createLayer('layer_vegetation', 'tileset_arbusto');
         //Set de los colliders
         this.map.setCollisionByExclusion([-1], true, true, 'layer_ground');
         this.map.setCollisionByExclusion([-1], true, true, 'layer_pipes');
@@ -194,7 +188,7 @@ class gameState extends Phaser.Scene {
             switch (element.type) {
 
                 case "lootBlock":
-                    this.data = {posX : element.x, posY: element.y, spriteTag: 'lootBlock', content: element.properties}
+                    this.data = { posX: element.x, posY: element.y, spriteTag: 'lootBlock', content: element.properties }
                     this.lootBlocks.add(new lootBlock(this, this.data));
                     this.allBlocks.add(this.object);
                     break;
@@ -211,26 +205,26 @@ class gameState extends Phaser.Scene {
                     this.object = new pickeableItem(this, element.x, element.y, "yoshi_coin", 'yoshiCoin');
                     break;
                 case "yellowBlock":
-                    this.data = {posX : element.x, posY: element.y, spriteTag: 'eyeCoin', content: element.properties}
-                    this.object = new yellowEyeBlock(this,  this.data);
+                    this.data = { posX: element.x, posY: element.y, spriteTag: 'eyeCoin', content: element.properties }
+                    this.object = new yellowEyeBlock(this, this.data);
                     this.allBlocks.add(this.object);
                     break;
                 case "buttonP":
-                    this.data = {posX : element.x, posY: element.y, spriteTag: 'buttonP', frame : 0}
-                    this.object = new buttonPBlock(this,  this.data);
-                    this.allBlocks.add(  this.object);
-                break;
-                case "cloud":
-                    this.data = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
-                    this.object = new normalBlock(this,  this.data);
+                    this.data = { posX: element.x, posY: element.y, spriteTag: 'buttonP', frame: 0 }
+                    this.object = new buttonPBlock(this, this.data);
                     this.allBlocks.add(this.object);
-                break;
+                    break;
+                case "cloud":
+                    this.data = { posX: element.x, posY: element.y, spriteTag: 'blocks', frame: 3 }
+                    this.object = new normalBlock(this, this.data);
+                    this.allBlocks.add(this.object);
+                    break;
                 case "topoFloor":
-                  //  const objectTopo = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
+                    //  const objectTopo = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
                     //this.object = new 
-                break;
-                case "topoWall": 
-                break;
+                    break;
+                case "topoWall":
+                    break;
             }
         }, this);
     }
@@ -248,6 +242,7 @@ class gameState extends Phaser.Scene {
     loadAnimations() {
         this.loadYoshiAnimations();
         this.loadKoopaAnimations();
+        this.loadMoleAnimations();
         //Misc animations
 
         this.anims.create(
@@ -290,8 +285,32 @@ class gameState extends Phaser.Scene {
     loadYoshiAnimations() {
 
     }
-    loadKoopaAnimations()
-    {
+
+    loadMoleAnimations() {
+        this.anims.create(
+            {
+                key: 'walkTopo',
+                frames: this.anims.generateFrameNumbers('topo', { start: 0, end: 1 }),
+                frameRate: 11,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'spawnTopoWall',
+                frames: this.anims.generateFrameNumbers('topo', { start: 3, end: 4 }),
+                frameRate: 11,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'spawnTopoFloor',
+                frames: this.anims.generateFrameNumbers('topo', { start: 5, end: 6 }),
+                frameRate: 11,
+                repeat: -1
+            });
+    }
+
+    loadKoopaAnimations() {
         this.anims.create(
             {
                 key: 'redKoopa',

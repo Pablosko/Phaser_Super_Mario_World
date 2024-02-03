@@ -224,6 +224,7 @@ class mario extends character
            0 -> IDLE 1 -> LOOK_UP 2 -> DUCK 3 al 5 -> WALK 6 al 8 -> RUN 9 -> SKID  10 -> PIPE 11 -> JUMP  12 -> FALL 13 -> RUN JUMP 14 al 17 -> SPIN JUMP 18 -> SLIDe 19 -> KICK
           20 al 22 -> SWIM 23 VICTORY
           */
+         
         this.anims.create(
             {
                 key: 'walk',
