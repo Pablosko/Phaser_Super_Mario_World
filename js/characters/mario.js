@@ -6,7 +6,6 @@ class mario extends character
         
         this.loadBigMarioAnimations();
         this.loadLittleMarioAnimations();
-        this.checkPointPosition = { x: 0, y: 0}
         this.jumping = false;
         this.jumpFrames = 30;
         this.spinframes = 20;
@@ -26,7 +25,19 @@ class mario extends character
         this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
        
 
-    } 
+    returnToCheckPoint()
+    {
+        this.setFrame(0);
+        this.dead = false
+        this.collider.active = true;
+        this.collider2.active = true;
+        this.scene.colliderMarioEnemies = true;
+        this.x = this.checkPX;
+        this.y = this.checkPY;
+        this.body.x = this.checkPX;
+        this.body.y = this.checkPY;
+    }
+
     getDamage(damage)
     {
         this.hp -= damage;
@@ -76,7 +87,7 @@ class mario extends character
         });
 
         this.scene.cameras.main.once('camerafadeoutcomplete', () => { 
-            this.scene.showGameOverMenu(false);            
+            this.scene.showGameOverMenu(false);         
         
         });
 

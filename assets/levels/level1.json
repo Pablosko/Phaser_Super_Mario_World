@@ -1538,8 +1538,8 @@
                  "type":"barsFat",
                  "visible":true,
                  "width":0,
-                 "x":4839.45,
-                 "y":313.273
+                 "x":4839,
+                 "y":378
                 }, 
                 {
                  "height":0,
@@ -1550,8 +1550,8 @@
                  "type":"stickBarFat",
                  "visible":true,
                  "width":0,
-                 "x":4840,
-                 "y":379.818
+                 "x":4839,
+                 "y":311
                 }, 
                 {
                  "height":0,
@@ -1704,7 +1704,7 @@
          "y":0
         }],
  "nextlayerid":22,
- "nextobjectid":229,
+ "nextobjectid":233,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
