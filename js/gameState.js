@@ -123,7 +123,11 @@ class gameState extends Phaser.Scene {
     create() {
         const uiScene = this.scene.get('UIScene');
         this.customEmiter = new Phaser.Events.EventEmitter();
+
+        //Variables
         this.win = false;
+        this.retries = true;
+
         this.imagenTemporal = this.add.image(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'bg_start');
         this.imagenTemporal.setOrigin(0.5, 0.5);
 
@@ -132,8 +136,6 @@ class gameState extends Phaser.Scene {
             this.loadAnimations();
             this.generateMap();
 
-            // ?? touches dont move
-            // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
             this.bg = this.add.tileSprite(0, config.height * 0.95, config.width, 512, 'bg').setOrigin(0, 0.5);
             this.bg.setDepth(-50);
             this.bg.setScrollFactor(0, 1);
@@ -239,6 +241,13 @@ class gameState extends Phaser.Scene {
                 case "koopa":
                     //create little kopa
                     break;
+                    
+                    case "shellGreen":
+                        //create green sehll
+                    break;
+                    case "shellRed":
+                            //create red shell
+                        break;
                 case "enemyRugby":
                     this.enemies.add(new rugby(this, element.x, element.y, "rugbyEnemy"));
                     break;
@@ -253,7 +262,6 @@ class gameState extends Phaser.Scene {
                     break;
                 case "barsFat":
                     if (this.checkPointFatImg) {
-
                         this.bar2 = new barsCheckPoints(this, element.x, element.y, 'checkPointEndBar', this.checkPointFatImg, true);
                     }
                     break;
@@ -502,23 +510,38 @@ class gameState extends Phaser.Scene {
     }
 
     showGameOverMenu(isTime) {
+        
         this.cameras.main.fadeIn(500);
-        this.scene.stop('UIScene');
+        if(!this.retries)
+        {
+            this.scene.stop('UIScene');    
+        }
+        
         if (isTime) {
             this.bg_lose = this.add.image(this.cameras.main.width / 2 + this.cameras.main.scrollX, this.cameras.main.height / 2 + this.cameras.main.scrollY, 'bg_go_timeup');
         }
         else {
             this.bg_lose = this.add.image(this.cameras.main.width / 2 + this.cameras.main.scrollX, this.cameras.main.height / 2 + this.cameras.main.scrollY, 'bg_gameover');
         }
-
-        this.bg_lose.setDepth(5000000000000000);
-        console.log(this.bg_lose);
-        this.time.delayedCall(1500, function () {
-            this.scene.stop('main_scene');
-            this.scene.start('menu');
-        }, [], this);
-
-    }
+        this.bg_lose.setDepth(1000);
+        if(this.retries)
+        {
+            this.time.delayedCall(400, function () 
+            {
+                this.retries = false;
+                this.mario.returnToCheckPoint();
+                this.bg_lose.destroy();
+            }, [], this);
+        }
+        else
+        {
+            this.time.delayedCall(1500, function () {
+                this.scene.stop('main_scene');
+                this.scene.start('menu');
+            }, [], this);
+        }
+    }  
+    
 
     showWinMenu() {
 
