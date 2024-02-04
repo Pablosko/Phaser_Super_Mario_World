@@ -130,9 +130,9 @@ class gameState extends Phaser.Scene {
             this.loadAnimations();
             this.generateMap();
             // ?? touches dont move
-             this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
+           this.bg = this.add.tileSprite(0 ,config.height * 0.95, config.width ,512,'bg').setOrigin(0, 0.5);
              this.bg.setDepth(-50);
-             this.bg.setScrollFactor(0);
+             this.bg.setScrollFactor(0, 1);
             this.mario = new mario(this, config.width * .2, config.height * .8);
             this.generateGameElements();
             this.cameras.main.startFollow(this.mario);
@@ -236,14 +236,14 @@ class gameState extends Phaser.Scene {
                     break;
                 case "enemyRugby":
                     this.enemies.add(new rugby(this, element.x, element.y, "rugbyEnemy"));
-                break;
+                    break;
             }
         }, this);
     }
 
     createCollisions() {
         this.physics.add.collider(this.mario, this.lootBlocks, (_mario, _block) => { this.mario.OnWallCollide(_mario, _block) }, null, this);
-        this.physics.add.collider(this.pBlock, this.allBlocks, (_mario, _block) => {  }, null, this);
+        this.physics.add.collider(this.pBlock, this.allBlocks, (_mario, _block) => { }, null, this);
         this.physics.add.collider(this.enemies, this.walls, (_enemie, _wall) => { }, null, this);
         this.colliderMarioEnemies = this.physics.add.collider(this.mario, this.enemies, (_mario, _enemie) => {
             _mario.CollideWithEnemie(_mario, _enemie);
@@ -298,11 +298,78 @@ class gameState extends Phaser.Scene {
     }
 
     loadYoshiAnimations() {
+        this.anims.create(
+            {
+                key: 'openEgg',
+                frames: this.anims.generateFrameNumbers('egg', { start: 0, end: 1 }),
+                frameRate: 12,
+                repeat: 3
+            });
+        this.anims.create(
+            {
+                key: 'yoshiSpawnAnim',
+                frames: this.anims.generateFrameNumbers('yoshiSpawn', { start: 0, end: 4 }),
+                frameRate: 6,
+            });
+        this.anims.create(
+            {
+                key: 'yoshiidle',
+                frames: this.anims.generateFrameNumbers('yoshiSprites', { start: 0, end: 1 }),
+                frameRate: 6,
+                repeat: -1
+            });
+        /* yoshi scary jump frame 3,
+            3 -> Jump to eat
+            4 -> Jump while eating
+            5 -> random
+            6 - 7 -> walking no mario up
+        */
 
+        this.anims.create(
+            {
+                key: 'walkingEmpty',
+                frames: this.anims.generateFrameNumbers('yoshiSprites', { start: 6, end: 7 }),
+                frameRate: 6,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'WalkingMario',
+                frames: this.anims.generateFrameNumbers('yoshiWalks', { start: 0, end: 2 }),
+                frameRate: 6,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'scarywalk',
+                frames: this.anims.generateFrameNumbers('yoshiWalks', { start: 3, end: 5 }),
+                frameRate: 6,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'walkToEat',
+                frames: this.anims.generateFrameNumbers('yoshiWalks', { start: 6, end: 8 }),
+                frameRate: 6,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'walkeating',
+                frames: this.anims.generateFrameNumbers('yoshiWalks', { start: 9, end: 11 }),
+                frameRate: 6,
+                repeat: -1
+            });
+        this.anims.create(
+            {
+                key: 'yoshiTongue',
+                frames: this.anims.generateFrameNumbers('yoshiTongue', { start: 9, end: 11 }),
+                frameRate: 6,
+                repeat: -1
+            });
     }
 
-    loadRugbyAnimations()
-    {
+    loadRugbyAnimations() {
         this.anims.create(
             {
                 key: 'runRugby',
@@ -417,19 +484,21 @@ class gameState extends Phaser.Scene {
     showGameOverMenu(isTime)
     {
         this.cameras.main.fadeIn(500);
-
+        this.scene.stop('UIScene');
         if(isTime)
         {
-            this.bg_lose = this.add.image(this.width * 0.5, this.height * 0.5, 'bg_go_timeup');
+            this.bg_lose = this.add.image(this.cameras.main.width / 2 + this.cameras.main.scrollX, this.cameras.main.height / 2 + this.cameras.main.scrollY, 'bg_go_timeup');
         }
         else{
-            this.bg_lose = this.add.image(this.width * 0.5, this.height * 0.5, 'bg_gameover');
+            this.bg_lose = this.add.image(this.cameras.main.width / 2 + this.cameras.main.scrollX, this.cameras.main.height / 2 + this.cameras.main.scrollY, 'bg_gameover');
         }
+
+        this.bg_lose.setDepth(5000000000000000);
+        console.log(this.bg_lose);
         this.time.delayedCall(1500, function () {
-            this.scene.stop('UIScene');
             this.scene.stop('main_scene');
             this.scene.start('menu');
         }, [], this);
-        
+
     }
 }

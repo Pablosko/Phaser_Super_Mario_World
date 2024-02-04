@@ -21,7 +21,7 @@ class mario extends character
         this.hp = 1;
         this.dead = false;
         //Yoshi variables
-        this.isOnYoshi = false;
+        this.yoshi = undefined;
         this.isBigMario = false;
         this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
         // this.scene.load.image('bg_gameover', 'backgrounds/bg_gameover.png');
@@ -154,7 +154,18 @@ class mario extends character
     {
         if(this.dead)
             return;
+        if(this.yoshi != undefined)
+        {
+            this.yoshiInputs();
+        }else
+         this.normalInputs();
 
+
+
+        super.preUpdate(time, delta);
+    }
+    normalInputs()
+    {
         this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;
         this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.8;
         if(this.cursores.left.isDown)
@@ -236,10 +247,60 @@ class mario extends character
             if(this.currentJumpFrames >= this.spinframes)
                 this.canJump = false;
         }
-
-        super.preUpdate(time, delta);
     }
+    yoshiInputs()
+    {
+        this.body.setAllowGravity(false);
+        this.body.enabled = false;
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
+        this.x = this.yoshi.getPlayerPositionX().x;
+        this.y = this.yoshi.getPlayerPositionX().y;
+        this.body.x = this.x;
+        this.body.y = this.y;
+        console.log(this.body.velocity);
 
+
+        this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;
+        this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.8;
+        if(this.cursores.left.isDown)
+        {
+            this.yoshi.body.velocity.x -=   this.acceleration ;
+            if(this.yoshi.body.velocity.x < -this.maxspeed )
+             this.yoshi.body.setVelocityX(-this.maxspeed );            
+            this.yoshi.flipX = this.yoshi.body.velocity.x < 0;
+            this.flipX = this.yoshi.body.velocity.x > 0;
+
+        }else
+        if(this.cursores.right.isDown)
+        {
+            this.yoshi.body.velocity.x +=  this.acceleration ;
+            if(this.yoshi.body.velocity.x >this.maxspeed )
+                this.yoshi.body.setVelocityX(this.maxspeed );            
+            this.yoshi.flipX = this.yoshi.body.velocity.x < 0;
+            this.flipX = this.yoshi.body.velocity.x > 0;
+        }
+        if(this.jumpKey)
+        {
+            
+        }
+
+    }
+    startRiding(yoshi)
+    {
+        this.yoshi = yoshi;
+        if(this.isBigMario)
+        {
+            this.setTexture('marioBigRidingYoshi');
+            this.setFrame(1);
+        }
+        else
+        {
+            this.setTexture('marioRidingYoshi');
+            this.setFrame(1);
+        }
+        this.anims.stop();
+    }
     setAnimation(bigAnimation, smallAnimation)
     {
         if(this.isBigMario)

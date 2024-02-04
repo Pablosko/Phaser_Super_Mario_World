@@ -22,9 +22,9 @@ class lootBlock extends block
         if(this.content == "mushroom")
         {
             this.loot = new mushroomPickeable(this.scene, this.x, this.y - this.height * 1.8, "mushroom", 'powerUps')
-        }else if(this.content == "yoshi")
+        }else if(this.content == "egg")
         {
-            this.loot = new yoshi(this.scene, this.x, this.y - this.height * 1.5, "yoshi", 'egg');
+            this.loot = new yoshi(this.scene, this.x, this.y - this.height * 1.5, "egg", 'egg');
         }
         else
         {

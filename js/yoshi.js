@@ -9,34 +9,49 @@ class yoshi extends pickeableItem
         this.body.setImmovable(false);
         this.body.setAllowGravity(true); 
         this.setColliders();
+        this.anims.play("openEgg").on('animationcomplete', this.spawnYoshi, this);
+        this.grounded = true;
+        this.canBePick = false;
+        this.body.setDragX(250);
+
     }
 
     preUpdate(time, delta)
     {
         super.preUpdate(time, delta);
-        this.x += .5;
-        this.areaZone.x = this.x;
-        this.areaZone.y = this.y;
     }
-
+    spawnYoshi()
+    {
+        this.body.setSize(26,32);
+        this.body.setOffset(0,0);
+        this.y -=10;
+        this.body.y -=10;
+        this.setTexture("yoshiSpawn");
+        this.anims.play("yoshiSpawnAnim").on('animationcomplete',this.completeSpawn,this);
+    }
+    completeSpawn()
+    {
+        this.anims.stop();
+        this.setTexture("yoshiSprites");
+        this.anims.play('yoshiidle');
+        this.canBePick = true;
+        this.jumpEvent = this.scene.time.addEvent({
+            delay: Phaser.Math.Between(250,750),  
+            callback: () => {if(this.grounded){this.body.velocity.y -=  Phaser.Math.Between(120,200); this.grounded = false} },  
+            callbackScope: this,
+            loop: true  
+        });
+    }
     setColliders()
     {
-        this.scene.physics.add.overlap(
-            this.scene.mario,
-            this.areaZone,
-            () => {
-                this.pickItem();
-            },
-            null,
-            this
-        );
+      super.setColliders();
 
 
      this.scene.physics.add.collider
         (
             this,
             this.scene.walls,
-            this.cosa,
+            this.touchFloor,
             null,
             this
         );
@@ -44,7 +59,7 @@ class yoshi extends pickeableItem
         (
             this,
             this.scene.pipes,
-            this.cosa,
+            this.touchFloor,
             null,
             this
         );
@@ -53,15 +68,53 @@ class yoshi extends pickeableItem
         (
             this,
             this.scene.lootBlocks,
-            this.cosa,
+            this.touchFloor,
             null,
             this
         );
     }
 
+    pickItem()
+    {
+        if(!this.canBePick)
+            return;
+            console.log("ride time");
 
+        this.areaZone.body.setEnable(false); 
+        //this.normalCoinSound.play();
+        this.scene.mario.startRiding(this);
+        this.scene.time.removeEvent(this.jumpEvent);
+    }
     cosa()
     {
 
     }
+    jump()
+    {
+        this.setTexture('yoshiSprites');
+        this.body.velociy.y += 350;
+        this.setFrame(3);
+    }
+    move(direcction)
+    {
+        if(direction == 'right')
+        {
+
+        }else if(direcction == 'left')
+        {
+
+        }
+    }
+    touchFloor()
+    {
+        this.grounded = true;
+    }
+    getPlayerPositionX()
+    {
+        this.sign = 1;
+        if(this.flipX)
+            this.sign = -1;
+        return {x: this.x - 7  * this.sign,y: this.y - 10};
+    }
+  
 }
