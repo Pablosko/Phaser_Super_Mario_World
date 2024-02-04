@@ -174,7 +174,6 @@ class mario extends character
             if(this.body.velocity.x < -this.maxspeed )
              this.body.setVelocityX(-this.maxspeed );            
             this.flipX = this.body.velocity.x > 0;
-            //this.scene.TryParallax(-1);          
         }else
         if(this.cursores.right.isDown)
         {
@@ -182,7 +181,6 @@ class mario extends character
             if(this.body.velocity.x >this.maxspeed )
                 this.body.setVelocityX(this.maxspeed );            
             this.flipX = this.body.velocity.x > 0;
-          //  this.scene.TryParallax(1);
         }
         {
             if(!this.jumping)

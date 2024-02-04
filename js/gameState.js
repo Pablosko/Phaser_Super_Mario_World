@@ -129,11 +129,14 @@ class gameState extends Phaser.Scene {
             this.imagenTemporal.destroy();
             this.loadAnimations();
             this.generateMap();
+
             // ?? touches dont move
-           this.bg = this.add.tileSprite(0 ,config.height * 0.95, config.width ,512,'bg').setOrigin(0, 0.5);
+            // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
+             this.bg = this.add.tileSprite(0 ,config.height * 0.95, config.width ,512,'bg').setOrigin(0, 0.5);
              this.bg.setDepth(-50);
              this.bg.setScrollFactor(0, 1);
-            this.mario = new mario(this, config.width * .2, config.height * .8);
+
+            this.mario = new mario(this, config.width * .2, config.height + 100);
             this.generateGameElements();
             this.cameras.main.startFollow(this.mario);
             this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
