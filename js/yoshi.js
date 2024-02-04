@@ -13,12 +13,27 @@ class yoshi extends pickeableItem
         this.grounded = true;
         this.canBePick = false;
         this.body.setDragX(250);
+        this.jumpCooldown = 0;
+        this.jumpCooldownDuration = 250;
+        this.WhileJumpingEvent;
+        this.jumping = false;
+        this.yoshiJumpEvent
 
     }
 
     preUpdate(time, delta)
     {
         super.preUpdate(time, delta);
+        if (this.jumpCooldown > 0) 
+            this.jumpCooldown -= delta;
+
+            if (this.WhileJumpingEvent && this.WhileJumpingEvent.getProgress() === 1) {
+                this.WhileJumpingEvent.remove();
+            }
+        if(this.jumping)
+        {
+            this.jump();
+        }
     }
     spawnYoshi()
     {
@@ -78,7 +93,6 @@ class yoshi extends pickeableItem
     {
         if(!this.canBePick)
             return;
-            console.log("ride time");
 
         this.areaZone.body.setEnable(false); 
         //this.normalCoinSound.play();
@@ -91,10 +105,10 @@ class yoshi extends pickeableItem
     }
     jump()
     {
-        console.log("jump");
         this.setTexture('yoshiSprites');
-        this.body.velocity.y -= 350;
+        this.body.velocity.y = -gamePrefs.yoshiJump;
         this.setFrame(3);
+      
     }
     move(direcction,acceleration,maxspeed)
     {
@@ -117,6 +131,7 @@ class yoshi extends pickeableItem
     touchFloor()
     {
         this.grounded = true;
+        this.scene.time.removeEvent(this.WhileJumpingEvent);
     }
     getPlayerPositionX()
     {

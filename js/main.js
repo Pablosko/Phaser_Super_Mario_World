@@ -8,6 +8,8 @@ var gamePrefs=
     ENEMY_SPEED:20,
     ENEMY_MAXHP:2,
     PLAYER_MAXHP:5,
+    yoshiJump:-150,
+    yoshiJumpTime:300,
 
     level1Width: 320*16,
     level1Height: 27*16

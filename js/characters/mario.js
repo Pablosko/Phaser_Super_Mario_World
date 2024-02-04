@@ -24,6 +24,7 @@ class mario extends character
         this.yoshi = undefined;
         this.isBigMario = false;
         this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
+       
 
     } 
     getDamage(damage)
@@ -267,10 +268,24 @@ class mario extends character
         {
             this.yoshi.move('right',this.acceleration,this.maxspeed);
         }
-        if(Phaser.Input.Keyboard.DownDuration(this.jumpKey,250))
+        if(this.jumpKey.isDown && this.yoshi.grounded)
         {
-            this.yoshi.jump();
+            this.yoshi.grounded = false;
+            this.yoshi.jumping = true;
+            console.log(gamePrefs.yoshiJumpTime);
+            this.yoshi.yoshiJumpEvent = this.scene.time.delayedCall(gamePrefs.yoshiJumpTime, () => {
+                this.yoshi.jumping = false;
+            }, [], this);
         }
+        if((this.jumpKey.isUp || this.yoshi.grounded) && this.yoshi.jumping)
+        {
+            console.log("se para")
+            if( this.yoshi.yoshiJumpEvent == undefined)
+             return;
+            this.yoshi.jumping = false;
+            this.yoshi.yoshiJumpEvent.remove()
+        }
+        
 
     }
     startRiding(yoshi)
