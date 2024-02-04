@@ -91,7 +91,7 @@ class gameState extends Phaser.Scene {
             { frameWidth: 26, frameHeight: 32 });
         this.load.spritesheet('yoshiSprites', 'yoshi_sprites.png',
             { frameWidth: 26, frameHeight: 32 });
-        this.load.spritesheet('yoshiTongue', 'yoshi_tongue.png',
+        this.s = this.load.spritesheet('yoshiTongue', 'yoshi_tongue.png',
             { frameWidth: 48, frameHeight: 32 });
         this.load.spritesheet('yoshiWalks', 'yoshi_walking.png',
             { frameWidth: 26, frameHeight: 32 });
@@ -364,7 +364,7 @@ class gameState extends Phaser.Scene {
             {
                 key: 'WalkingMario',
                 frames: this.anims.generateFrameNumbers('yoshiWalks', { start: 0, end: 2 }),
-                frameRate: 6,
+                frameRate: 12,
                 repeat: -1
             });
         this.anims.create(
@@ -390,11 +390,11 @@ class gameState extends Phaser.Scene {
             });
         this.anims.create(
             {
-                key: 'yoshiTongue',
-                frames: this.anims.generateFrameNumbers('yoshiTongue', { start: 9, end: 11 }),
-                frameRate: 6,
-                repeat: -1
+                key: 'yoshiAttack',
+                frames: this.anims.generateFrameNumbers('yoshiTongue', { start: 0, end: 1 }),
+                frameRate: 100
             });
+           
     }
 
     loadRugbyAnimations() {

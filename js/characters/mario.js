@@ -1,9 +1,7 @@
-class mario extends character
-{
-    constructor(_scene,_posX,_posY)
-    { //instanciar el objeto
-        super(_scene,_posX,_posY,'mario');
-        
+class mario extends character {
+    constructor(_scene, _posX, _posY) { //instanciar el objeto
+        super(_scene, _posX, _posY, 'mario');
+
         this.loadBigMarioAnimations();
         this.loadLittleMarioAnimations();
         this.jumping = false;
@@ -13,9 +11,9 @@ class mario extends character
         this.canJump = true;
         this.spining = false;
         this.cursores = this.scene.input.keyboard.createCursorKeys();
-        this.jumpKey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);  
-        this.spinKey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);  
-        this.runkey =  this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);  
+        this.jumpKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.spinKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+        this.runkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
         this.body.setSize(this.width * 0.5, this.height);
         this.hp = 1;
         this.dead = false;
@@ -23,10 +21,11 @@ class mario extends character
         this.yoshi = undefined;
         this.isBigMario = false;
         this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
-       
+        this.checkPX = this.x;
+        this.checkPY = this.y;
+    }
 
-    returnToCheckPoint()
-    {
+    returnToCheckPoint() {
         this.setFrame(0);
         this.dead = false
         this.collider.active = true;
@@ -38,227 +37,206 @@ class mario extends character
         this.body.y = this.checkPY;
     }
 
-    getDamage(damage)
-    {
+
+    returnToCheckPoint() {
+        this.setFrame(0);
+        this.dead = false
+        this.collider.active = true;
+        this.collider2.active = true;
+        this.scene.colliderMarioEnemies = true;
+        this.x = this.checkPX;
+        this.y = this.checkPY;
+        this.body.x = this.checkPX;
+        this.body.y = this.checkPY;
+    }
+
+    getDamage(damage) {
         this.hp -= damage;
-        if(this.hp <= 0)
-        {
-            this.dead= true;
+        if (this.hp <= 0) {
+            this.dead = true;
             this.onDie();
         }
-        else if(this.hp == 1)
-        {
+        else if (this.hp == 1) {
             this.convertToSmallMario();
         }
 
     }
 
-    convertToSmallMario()
-    {
+    convertToSmallMario() {
         this.isBigMario = false;
         this.setTexture('mario');
         this.setFrame(0);
         this.body.setSize(this.width * 0.5, this.height);
     }
-    convertToBigMario()
-    {
+    convertToBigMario() {
         this.isBigMario = true;
         this.hp = 2;
         const centroY = this.y + this.displayHeight * 0.4;
         this.body.setSize(this.width, this.height);
-        this.body.setOffset(0, centroY - this.y);        
+        this.body.setOffset(0, centroY - this.y);
         this.setTexture('marioBig');
         this.setFrame(0);
     }
-    onDie()
-    {
+    onDie() {
         this.setTexture('marioDeath');
         this.scene.cameras.main.fadeOut(2000);
         this.scene.colliderMarioEnemies.active = false;
         this.scene.tweens.add({
             targets: this,
-            y: this.y - 120, 
+            y: this.y - 120,
             duration: 1000,
-            ease: 'Linear', 
+            ease: 'Linear',
             onComplete: () => {
                 this.collider.active = false;
                 this.collider2.active = false;
             }
         });
 
-        this.scene.cameras.main.once('camerafadeoutcomplete', () => { 
-            this.scene.showGameOverMenu(false);         
-        
+        this.scene.cameras.main.once('camerafadeoutcomplete', () => {
+            this.scene.showGameOverMenu(false);
+
         });
 
     }
 
-    jump()
-    {
+    jump() {
         this.jumpSound.play();
 
         this.body.setVelocityY(gamePrefs.PLAYER_JUMP_FORCE);
         this.anims.stop();
-        if(this.isBigMario)
-        {
+        if (this.isBigMario) {
             this.setFrame(8);
         }
-        else{
+        else {
 
             this.setFrame(11);
         }
         this.jumping = true;
     }
-    ResetJump()
-    {    
+    ResetJump() {
         this.currentJumpFrames = 0;
-        this.jumping = false; 
+        this.jumping = false;
         this.spining = false;
         this.body.checkCollision.up = false;
     }
-    setColliders()
-    {
-       this.collider = this.scene.physics.add.collider
-        (
-            this.character,
-            this.scene.walls,
-            this.ResetJump,
-            null,
-            this
-        );
+    setColliders() {
+        this.collider = this.scene.physics.add.collider
+            (
+                this.character,
+                this.scene.walls,
+                this.ResetJump,
+                null,
+                this
+            );
         this.collider2 = this.scene.physics.add.collider
-        (
-            this.character,
-            this.scene.pipes,
-            this.ResetJump,
-            null,
-            this
-        );
+            (
+                this.character,
+                this.scene.pipes,
+                this.ResetJump,
+                null,
+                this
+            );
         this.body.setDragX(250);
 
     }
-    CollideWithEnemie(_mario,_enemie)
-    {
-        if(_mario.body.touching.down && _enemie.body.touching.up && _enemie.isVulnerable())
-        {
-            _enemie.getDamage(1,_mario.body);
+    CollideWithEnemie(_mario, _enemie) {
+        if (_mario.body.touching.down && _enemie.body.touching.up && _enemie.isVulnerable()) {
+            _enemie.getDamage(1, _mario.body);
             _mario.jump();
         }
-        if(!_mario.body.touching.down && !_enemie.body.touching.up && _enemie.canDealDamage())
-        {
+        if (!_mario.body.touching.down && !_enemie.body.touching.up && _enemie.canDealDamage()) {
             this.scene.mario.getDamage(1);
-        }        
+        }
     }
-    OnWallCollide(_mario,_block)
-    {
+    OnWallCollide(_mario, _block) {
         if (_mario.body.touching.down && _block.body.touching.up)
             this.ResetJump();
-        if (_mario.body.touching.up && _block.body.touching.down)
-        {
-                this.canJump = false
+        if (_mario.body.touching.up && _block.body.touching.down) {
+            this.canJump = false
             this.body.setVelocityY(50);
         }
     }
-    preUpdate(time,delta)
-    {
-        if(this.dead)
+    preUpdate(time, delta) {
+        if (this.dead)
             return;
-        if(this.yoshi != undefined)
-        {
+        if (this.yoshi != undefined) {
             this.yoshiInputs();
-        }else
-         this.normalInputs();
+        } else
+            this.normalInputs();
 
 
 
         super.preUpdate(time, delta);
     }
-    normalInputs()
-    {
+    normalInputs() {
         this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;
         this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.8;
-        if(this.cursores.left.isDown)
-        {
-            this.body.velocity.x -=   this.acceleration ;
-            if(this.body.velocity.x < -this.maxspeed )
-             this.body.setVelocityX(-this.maxspeed );            
+        if (this.cursores.left.isDown) {
+            this.body.velocity.x -= this.acceleration;
+            if (this.body.velocity.x < -this.maxspeed)
+                this.body.setVelocityX(-this.maxspeed);
             this.flipX = this.body.velocity.x > 0;
             //this.scene.TryParallax(-1);          
-        }else
-        if(this.cursores.right.isDown)
+        } else
+            if (this.cursores.right.isDown) {
+                this.body.velocity.x += this.acceleration;
+                if (this.body.velocity.x > this.maxspeed)
+                    this.body.setVelocityX(this.maxspeed);
+                this.flipX = this.body.velocity.x > 0;
+                //  this.scene.TryParallax(1);
+            }
         {
-            this.body.velocity.x +=  this.acceleration ;
-            if(this.body.velocity.x >this.maxspeed )
-                this.body.setVelocityX(this.maxspeed );            
-            this.flipX = this.body.velocity.x > 0;
-          //  this.scene.TryParallax(1);
-        }
-        {
-            if(!this.jumping)
-            {
-                if(Math.abs(this.body.velocity.x) <= 0.1)
-                {
+            if (!this.jumping) {
+                if (Math.abs(this.body.velocity.x) <= 0.1) {
                     this.anims.stop();
                     this.setFrame(0);
                 }
-                else 
-                {
-                    if(Math.abs(this.body.velocity.x) >=  gamePrefs.PLAYER_MAXRUN_SPEED * 0.9)
-                    {
+                else {
+                    if (Math.abs(this.body.velocity.x) >= gamePrefs.PLAYER_MAXRUN_SPEED * 0.9) {
                         this.setAnimation('runBig', 'run');
                     }
-                    else
-                    {
+                    else {
                         this.setAnimation('walkBig', 'walk');
-                    }                    
+                    }
                 }
             }
         }
-        if(this.jumping && !this.spining)
-        {
-            if(this.body.velocity.y >= 0)
-            {
-                if(this.isBigMario)
-                {
+        if (this.jumping && !this.spining) {
+            if (this.body.velocity.y >= 0) {
+                if (this.isBigMario) {
                     this.setFrame(8);
                 }
-                else
-                {
+                else {
 
                     this.setFrame(12);
                 }
             }
         }
-        if(this.jumpKey.isUp && !this.jumping)
-        {
+        if (this.jumpKey.isUp && !this.jumping) {
             this.currentJumpFrames = 0;
             this.canJump = true;
         }
-        if(this.jumpKey.isDown && this.currentJumpFrames < this.jumpFrames && this.canJump) 
-        {
-            if(Phaser.Input.Keyboard.JustDown(this.jumpKey))
-            {
+        if (this.jumpKey.isDown && this.currentJumpFrames < this.jumpFrames && this.canJump) {
+            if (Phaser.Input.Keyboard.JustDown(this.jumpKey)) {
                 this.body.checkCollision.up = true;
             }
             this.currentJumpFrames++;
             this.jump();
-            if(this.currentJumpFrames >= this.jumpFrames)
+            if (this.currentJumpFrames >= this.jumpFrames)
                 this.canJump = false;
         }
-        if(Phaser.Input.Keyboard.DownDuration(this.spinKey,250) && this.currentJumpFrames < this.spinframes && this.canJump) 
-        {
-            if(this.currentJumpFrames == 0)
+        if (Phaser.Input.Keyboard.DownDuration(this.spinKey, 250) && this.currentJumpFrames < this.spinframes && this.canJump) {
+            if (this.currentJumpFrames == 0)
                 this.body.checkCollision.up = true;
             this.currentJumpFrames++;
             this.jump();
             this.setAnimation('spinBig', 'spin');
             this.spining = true;
-            if(this.currentJumpFrames >= this.spinframes)
+            if (this.currentJumpFrames >= this.spinframes)
                 this.canJump = false;
         }
     }
-    yoshiInputs()
-    {
+    yoshiInputs() {
         this.body.setAllowGravity(false);
         this.body.enabled = false;
         this.body.velocity.x = 0;
@@ -269,62 +247,49 @@ class mario extends character
         this.body.y = this.y;
 
 
-        this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;
-        this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.8;
-        if(this.cursores.left.isDown)
-        {
-            this.yoshi.move('left',this.acceleration,this.maxspeed);
-        }else
-        if(this.cursores.right.isDown)
-        {
-            this.yoshi.move('right',this.acceleration,this.maxspeed);
+        this.maxspeed = gamePrefs.PLAYER_MAX_SPEED 
+        this.acceleration = gamePrefs.PLAYER_ACCELERATION;
+        if (this.cursores.left.isDown) {
+            this.yoshi.move('left', this.acceleration, this.maxspeed);
+        } else
+            if (this.cursores.right.isDown) {
+                this.yoshi.move('right', this.acceleration, this.maxspeed);
+            }
+        if (this.jumpKey.isDown && this.yoshi.grounded) {
+            this.yoshi.startJumping();
         }
-        if(this.jumpKey.isDown && this.yoshi.grounded)
-        {
-            this.yoshi.grounded = false;
-            this.yoshi.jumping = true;
-            console.log(gamePrefs.yoshiJumpTime);
-            this.yoshi.yoshiJumpEvent = this.scene.time.delayedCall(gamePrefs.yoshiJumpTime, () => {
-                this.yoshi.jumping = false;
-            }, [], this);
-        }
-        if((this.jumpKey.isUp || this.yoshi.grounded) && this.yoshi.jumping)
-        {
-            console.log("se para")
-            if( this.yoshi.yoshiJumpEvent == undefined)
-             return;
+        if ((this.jumpKey.isUp || this.yoshi.grounded) && this.yoshi.jumping && !this.yoshi.attacking) {
+            if (this.yoshi.yoshiJumpEvent == undefined)
+                return;
             this.yoshi.jumping = false;
             this.yoshi.yoshiJumpEvent.remove()
         }
-        
+        if(this.runkey.isDown && !this.yoshi.attacking)
+        {
+            this.yoshi.attack()
+        }
 
     }
-    startRiding(yoshi)
-    {
+    startRiding(yoshi) {
         this.yoshi = yoshi;
-        if(this.isBigMario)
-        {
+        if (this.isBigMario) {
             this.setTexture('marioBigRidingYoshi');
             this.setFrame(1);
         }
-        else
-        {
+        else {
             this.setTexture('marioRidingYoshi');
             this.setFrame(1);
         }
         this.anims.stop();
 
-   
+
 
     }
-    setAnimation(bigAnimation, smallAnimation)
-    {
-        if(this.isBigMario)
-        {
-            this.anims.play(bigAnimation,true );
+    setAnimation(bigAnimation, smallAnimation) {
+        if (this.isBigMario) {
+            this.anims.play(bigAnimation, true);
         }
-        else
-        {
+        else {
             this.anims.play(smallAnimation, true);
         }
     }
@@ -334,7 +299,7 @@ class mario extends character
            0 -> IDLE 1 -> LOOK_UP 2 -> DUCK 3 al 5 -> WALK 6 al 8 -> RUN 9 -> SKID  10 -> PIPE 11 -> JUMP  12 -> FALL 13 -> RUN JUMP 14 al 17 -> SPIN JUMP 18 -> SLIDe 19 -> KICK
           20 al 22 -> SWIM 23 VICTORY
           */
-        
+
         this.anims.create(
             {
                 key: 'walk',
@@ -356,13 +321,13 @@ class mario extends character
                 frameRate: 35,
                 repeat: -1
             });
-            this.anims.create(
-                {
-                    key: 'grow',
-                    frames: this.anims.generateFrameNumbers('growMario', { start: 0, end: 2 }),
-                    frameRate: 35,
-                    repeat: -1
-                });
+        this.anims.create(
+            {
+                key: 'grow',
+                frames: this.anims.generateFrameNumbers('growMario', { start: 0, end: 2 }),
+                frameRate: 35,
+                repeat: -1
+            });
 
     }
     loadBigMarioAnimations() {

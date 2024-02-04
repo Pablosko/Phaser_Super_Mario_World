@@ -18,11 +18,17 @@ class yoshi extends pickeableItem
         this.WhileJumpingEvent;
         this.jumping = false;
         this.yoshiJumpEvent
+        this.attacking = false;
+        this.offsetX = 0;
+        this.offsetY = 0;
+        this.attackSide = 0;
 
     }
 
     preUpdate(time, delta)
     {
+        console.log(this.texture.key);
+
         super.preUpdate(time, delta);
         if (this.jumpCooldown > 0) 
             this.jumpCooldown -= delta;
@@ -33,7 +39,19 @@ class yoshi extends pickeableItem
         if(this.jumping)
         {
             this.jump();
+        } else if(Math.abs(this.body.velocity.x) > 0) {
+            if(this.texture.key != "yoshiWalks" && !this.attacking) 
+            {
+                console.log(this.attacking);
+                this.setTexture("yoshiWalks");
+                this.anims.play('WalkingMario',true)
+            }
+        }else if(this.texture.key == "yoshiWalks" && this.texture.key != "yoshiSprites" && !this.attacking)
+        {
+            this.setTexture("yoshiSprites");
+            this.anims.play('yoshiidle');
         }
+            
     }
     spawnYoshi()
     {
@@ -88,7 +106,41 @@ class yoshi extends pickeableItem
             this
         );
     }
+    attack()
+    {
+        if(this.attacking)
+            return;
+        this.attacking = true;
+        this.anims.stop();
+        this.setTexture("yoshiTongue");
+        this.setFrame(0);
+        this.setOffsetOnAttack();
+        
+        this.scene.time.delayedCall(150, () => {this.setFrame(1)}, [], this);
+        this.scene.time.delayedCall(500 + 150, () => {this.setFrame(0)}, [], this);
+        this.scene.time.delayedCall(150 + 500 +150, () => {
+            this.x -= this.offsetX;
+            this.offsetY = 0;
+            this.offsetX = 0;
+            this.body.setOffset(0,0);
 
+            this.attacking = false;
+            this.setTexture("yoshiSprites");
+            this.anims.play('yoshiidle');
+        }, [], this);
+
+      
+
+    }
+    setOffsetOnAttack()
+    {
+        this.attackSide = this.flipX;
+        this.offsetX = this.flipX ? -10 : 10
+        if(this.flipX)
+        this.body.setOffset(-this.offsetX +11,0);
+        this.offsetY = +6;
+        this.x += this.offsetX;
+    }
     pickItem()
     {
         if(!this.canBePick)
@@ -103,15 +155,25 @@ class yoshi extends pickeableItem
     {
         
     }
-    jump()
+    startJumping()
     {
         this.setTexture('yoshiSprites');
-        this.body.velocity.y = -gamePrefs.yoshiJump;
         this.setFrame(3);
-      
+        this.grounded = false;
+        this.jumping = true;
+        this.yoshiJumpEvent = this.scene.time.delayedCall(gamePrefs.yoshiJumpTime, () => {
+            this.jumping = false;
+        }, [], this);
+    }
+    jump()
+    {
+     
+        console.log(gamePrefs.yoshiJump);
+        this.body.velocity.y = gamePrefs.yoshiJump;
     }
     move(direcction,acceleration,maxspeed)
     {
+       
         if(direcction == 'right')
         {
             this.body.velocity.x += acceleration ;
@@ -127,6 +189,8 @@ class yoshi extends pickeableItem
             this.flipX = this.body.velocity.x < 0;
             this.scene.mario.flipX = this.body.velocity.x > 0;
         }
+        if(this.attacking && (this.attackSide != this.flipX))
+            this.setOffsetOnAttack();
     }
     touchFloor()
     {
@@ -138,7 +202,7 @@ class yoshi extends pickeableItem
         this.sign = 1;
         if(this.flipX)
             this.sign = -1;
-        return {x: this.x - 7  * this.sign,y: this.y - 10};
+        return {x: this.x - 7 * this.sign - this.offsetX,y: this.y - 10 + this.offsetY};
     }
   
 }
