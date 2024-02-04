@@ -232,7 +232,7 @@
         }, 
         {
          "id":4,
-         "image":"SuperMarioWorld-Yoshi'sIsland-Yoshi'sIsland2.png",
+         "image":"C:\/Users\/nahue\/Desktop\/TEMPORAL ASSETS SPMW\/SuperMarioWorld-Yoshi'sIsland-Yoshi'sIsland2.png",
          "name":"Capa de Imagen 1",
          "opacity":0.25,
          "type":"imagelayer",
@@ -1526,7 +1526,7 @@
                  "type":"stickBars",
                  "visible":true,
                  "width":0,
-                 "x":2583,
+                 "x":2583.75,
                  "y":372
                 }, 
                 {
@@ -1535,7 +1535,7 @@
                  "name":"",
                  "point":true,
                  "rotation":0,
-                 "type":"bars",
+                 "type":"barsFat",
                  "visible":true,
                  "width":0,
                  "x":4839.45,
@@ -1547,7 +1547,7 @@
                  "name":"",
                  "point":true,
                  "rotation":0,
-                 "type":"stickBar",
+                 "type":"stickBarFat",
                  "visible":true,
                  "width":0,
                  "x":4840,
@@ -1696,6 +1696,30 @@
                  "width":0,
                  "x":328.30303030303,
                  "y":298.848484848485
+                }, 
+                {
+                 "height":0,
+                 "id":227,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bars",
+                 "visible":true,
+                 "width":0,
+                 "x":136.5,
+                 "y":351.818
+                }, 
+                {
+                 "height":0,
+                 "id":228,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"stickBars",
+                 "visible":true,
+                 "width":0,
+                 "x":136.5,
+                 "y":372
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1704,7 +1728,7 @@
          "y":0
         }],
  "nextlayerid":22,
- "nextobjectid":225,
+ "nextobjectid":229,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -1713,7 +1737,7 @@
         {
          "columns":3,
          "firstgid":1,
-         "image":"floor_tileset.png",
+         "image":"C:\/Users\/nahue\/Desktop\/TEMPORAL ASSETS SPMW\/floor_tileset.png",
          "imageheight":144,
          "imagewidth":48,
          "margin":0,
@@ -1726,7 +1750,7 @@
         {
          "columns":10,
          "firstgid":28,
-         "image":"alltubos.png",
+         "image":"C:\/Users\/nahue\/Desktop\/TEMPORAL ASSETS SPMW\/alltubos.png",
          "imageheight":96,
          "imagewidth":160,
          "margin":0,
@@ -1739,7 +1763,7 @@
         {
          "columns":7,
          "firstgid":88,
-         "image":"plantitas.png",
+         "image":"C:\/Users\/nahue\/Desktop\/TEMPORAL ASSETS SPMW\/plantitas.png",
          "imageheight":16,
          "imagewidth":112,
          "margin":0,
@@ -1752,7 +1776,7 @@
         {
          "columns":15,
          "firstgid":95,
-         "image":"arbusto_big.png",
+         "image":"C:\/Users\/nahue\/Desktop\/TEMPORAL ASSETS SPMW\/arbusto_big.png",
          "imageheight":80,
          "imagewidth":240,
          "margin":0,

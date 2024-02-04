@@ -21,7 +21,7 @@ class uiScene extends Phaser.Scene
         this.currentPoints = 0;
         this.currentCoins = 0;
         this.currentTime = 400;
-
+        this.timeIsStoped = false;
         this.time.delayedCall(2300, () => {
             this.base_ui = this.add.sprite(5, 0, 'baseUI').setOrigin(0, 0);
             this.yoshiCoins = this.add.group();
@@ -65,7 +65,26 @@ class uiScene extends Phaser.Scene
         gameState.events.on('addYoshiCoin', this.updateYoshiCoin, this);
         gameState.events.on('addCoin', this.updateNormalCoin, this);
         gameState.events.on('addPoints', this.updatePoints, this);
+        gameState.events.on('stopTime', this.stopTime, this);
     }
+
+    stopTime()
+    {
+        this.timeIsStoped = true;
+    }
+
+    getCurrentTime()
+    {
+        console.log(this.currentTime);
+        this.text = "" + this.currentTime;
+        return this.text;
+    }
+
+    getCurrentPoints()
+    {
+        return this.currentPoints;
+    }
+
 
     updateYoshiCoin()
     {
@@ -93,10 +112,15 @@ class uiScene extends Phaser.Scene
 
     updateTimer()
     {
-        this.currentTime -= 1;
-        this.timeText.setText("" + this.currentTime);
+        if(!this.timeIsStoped)
+        {
+            this.currentTime -= 1;
+            this.timeText.setText("" + this.currentTime);
+        }
+
         if(this.currentTime <= 0)
         {
+            showGameOverMenu(true);
             //SetGame Over
         }
     }
