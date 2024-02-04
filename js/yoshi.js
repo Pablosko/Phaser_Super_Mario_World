@@ -87,22 +87,31 @@ class yoshi extends pickeableItem
     }
     cosa()
     {
-
+        
     }
     jump()
     {
+        console.log("jump");
         this.setTexture('yoshiSprites');
-        this.body.velociy.y += 350;
+        this.body.velocity.y -= 350;
         this.setFrame(3);
     }
-    move(direcction)
+    move(direcction,acceleration,maxspeed)
     {
-        if(direction == 'right')
+        if(direcction == 'right')
         {
-
+            this.body.velocity.x += acceleration ;
+            if(this.body.velocity.x > maxspeed)
+                this.body.setVelocityX(maxspeed);            
+            this.flipX = this.body.velocity.x < 0;
+            this.scene.mario.flipX = this.body.velocity.x > 0;
         }else if(direcction == 'left')
         {
-
+            this.body.velocity.x -= acceleration ;
+            if(this.body.velocity.x < -maxspeed)
+             this.body.setVelocityX(-maxspeed);            
+            this.flipX = this.body.velocity.x < 0;
+            this.scene.mario.flipX = this.body.velocity.x > 0;
         }
     }
     touchFloor()
