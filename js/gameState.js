@@ -5,17 +5,15 @@ class gameState extends Phaser.Scene {
 
     preload() {
         this.cameras.main.setBackgroundColor("112");
-        //this.load.setPath('assets/img');
         this.load.setPath('assets/img/backgrounds');
 
         this.load.image('bg', 'background_level1.png');
         this.load.image('bg_start', 'bg_mariostart.png');
         this.load.image('bg_gameover', 'bg_gameover.png');
-
         this.load.image('bg_go_timeup', 'bg_gameover_timeup.png');
+        this.load.image('bg_win', 'bg_clear.png');
 
         //Koopa Loads
-
         this.loadEnemiesSprites();
         this.loadMarioSprites();
         this.loadObjectsSprites();
@@ -27,6 +25,11 @@ class gameState extends Phaser.Scene {
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('powerUps', 'starmushroom.png',
             { frameWidth: 16, frameHeight: 16 });
+        this.load.image('checkPointBar', 'checkpoint_bar.png');
+        this.load.image('checkPointEndBar', 'checkpoint_end_bar.png');
+        this.load.image('checkPointEnd', 'checkpoint_end.png');
+        this.load.image('checkPoint', 'checkPoint.png');
+
 
         this.load.setPath('assets/levels');
         this.load.tilemapTiledJSON('level1', 'level1.json');
@@ -118,10 +121,9 @@ class gameState extends Phaser.Scene {
     }
 
     create() {
-        //temporal
         const uiScene = this.scene.get('UIScene');
         this.customEmiter = new Phaser.Events.EventEmitter();
-
+        this.win = false;
         this.imagenTemporal = this.add.image(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'bg_start');
         this.imagenTemporal.setOrigin(0.5, 0.5);
 
@@ -132,9 +134,9 @@ class gameState extends Phaser.Scene {
 
             // ?? touches dont move
             // this.bg = this.add.tileSprite(config.width*0.5,config.height,config.width,1024-136,'bg').setOrigin(0.5,1);
-             this.bg = this.add.tileSprite(0 ,config.height * 0.95, config.width ,512,'bg').setOrigin(0, 0.5);
-             this.bg.setDepth(-50);
-             this.bg.setScrollFactor(0, 1);
+            this.bg = this.add.tileSprite(0, config.height * 0.95, config.width, 512, 'bg').setOrigin(0, 0.5);
+            this.bg.setDepth(-50);
+            this.bg.setScrollFactor(0, 1);
 
             this.mario = new mario(this, config.width * .2, config.height + 100);
             this.generateGameElements();
@@ -239,6 +241,21 @@ class gameState extends Phaser.Scene {
                     break;
                 case "enemyRugby":
                     this.enemies.add(new rugby(this, element.x, element.y, "rugbyEnemy"));
+                    break;
+                case "bars":
+                    this.checkPointImg = this.add.image(element.x, element.y, 'checkPoint');
+                    break;
+                case "stickBars":
+                    this.bar = new barsCheckPoints(this, element.x, element.y, 'checkPointBar', this.checkPointImg, true);
+                    break;
+                case "stickBarFat":
+                    this.checkPointFatImg = this.add.image(element.x, element.y, 'checkPointEnd');
+                    break;
+                case "barsFat":
+                    if (this.checkPointFatImg) {
+
+                        this.bar2 = new barsCheckPoints(this, element.x, element.y, 'checkPointEndBar', this.checkPointFatImg, true);
+                    }
                     break;
             }
         }, this);
@@ -484,15 +501,13 @@ class gameState extends Phaser.Scene {
     update() {
     }
 
-    showGameOverMenu(isTime)
-    {
+    showGameOverMenu(isTime) {
         this.cameras.main.fadeIn(500);
         this.scene.stop('UIScene');
-        if(isTime)
-        {
+        if (isTime) {
             this.bg_lose = this.add.image(this.cameras.main.width / 2 + this.cameras.main.scrollX, this.cameras.main.height / 2 + this.cameras.main.scrollY, 'bg_go_timeup');
         }
-        else{
+        else {
             this.bg_lose = this.add.image(this.cameras.main.width / 2 + this.cameras.main.scrollX, this.cameras.main.height / 2 + this.cameras.main.scrollY, 'bg_gameover');
         }
 
@@ -502,6 +517,42 @@ class gameState extends Phaser.Scene {
             this.scene.stop('main_scene');
             this.scene.start('menu');
         }, [], this);
+
+    }
+
+    showWinMenu() {
+
+        if(!this.win)
+        {
+            this.mario.dead = true;
+            this.win = true;
+            this.wid = this.cameras.main.width / 2 + this.cameras.main.scrollX;
+            this.hei = this.cameras.main.height / 2 + this.cameras.main.scrollY;
+    
+            let currentTimeValue = this.scene.get('UIScene').getCurrentTime();
+    
+            this.events.emit('stopTime');
+    
+            this.bg_win = this.add.image(this.wid, this.hei, 'bg_win');
+            this.bg_win.setDepth(50);
+    
+            this.time2 = this.add.bitmapText(this.wid * 0.68, this.hei * 1.01, 'UIfont', '' + currentTimeValue, 8).setDepth(5);
+            this.multiplier = this.add.bitmapText(this.wid * 0.92, this.hei * 1.01, 'UIfont', '50', 8).setDepth(5);
+            this.result = currentTimeValue * 50;
+            this.resulttxt = this.add.bitmapText(this.wid * 1.2, this.hei * 1.01, 'UIfont', '' + this.result, 8).setDepth(5);
+            this.events.emit('addPoints', this.result);
+    
+            this.time2.setDepth(105);
+            this.multiplier.setDepth(105);
+    
+            this.resulttxt.setDepth(105);
+    
+            this.time.delayedCall(10000, function () {
+                this.scene.stop('UIScene');
+                this.scene.stop('main_scene');
+                this.scene.start('menu');
+            }, [], this);
+        }
 
     }
 }

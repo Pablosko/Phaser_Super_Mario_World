@@ -6,7 +6,7 @@ class mario extends character
         
         this.loadBigMarioAnimations();
         this.loadLittleMarioAnimations();
-
+        this.checkPointPosition = { x: 0, y: 0}
         this.jumping = false;
         this.jumpFrames = 30;
         this.spinframes = 20;
@@ -24,7 +24,6 @@ class mario extends character
         this.yoshi = undefined;
         this.isBigMario = false;
         this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
-        // this.scene.load.image('bg_gameover', 'backgrounds/bg_gameover.png');
 
     } 
     getDamage(damage)
@@ -33,7 +32,6 @@ class mario extends character
         if(this.hp <= 0)
         {
             this.dead= true;
-            //Death -> animgame over onend gameover screen and menu
             this.onDie();
         }
         else if(this.hp == 1)
@@ -63,7 +61,6 @@ class mario extends character
     onDie()
     {
         this.setTexture('marioDeath');
-
         this.scene.cameras.main.fadeOut(2000);
         this.scene.colliderMarioEnemies.active = false;
         this.scene.tweens.add({
