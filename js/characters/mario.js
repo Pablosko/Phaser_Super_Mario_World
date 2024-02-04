@@ -174,6 +174,7 @@ class mario extends character
             if(this.body.velocity.x < -this.maxspeed )
              this.body.setVelocityX(-this.maxspeed );            
             this.flipX = this.body.velocity.x > 0;
+            //this.scene.TryParallax(-1);          
         }else
         if(this.cursores.right.isDown)
         {
@@ -181,6 +182,7 @@ class mario extends character
             if(this.body.velocity.x >this.maxspeed )
                 this.body.setVelocityX(this.maxspeed );            
             this.flipX = this.body.velocity.x > 0;
+          //  this.scene.TryParallax(1);
         }
         {
             if(!this.jumping)
@@ -256,31 +258,21 @@ class mario extends character
         this.y = this.yoshi.getPlayerPositionX().y;
         this.body.x = this.x;
         this.body.y = this.y;
-        console.log(this.body.velocity);
 
 
         this.maxspeed = this.runkey.isUp ? gamePrefs.PLAYER_MAX_SPEED : gamePrefs.PLAYER_MAXRUN_SPEED;
         this.acceleration = this.runkey.isUp ? gamePrefs.PLAYER_ACCELERATION : gamePrefs.PLAYER_ACCELERATION * 0.8;
         if(this.cursores.left.isDown)
         {
-            this.yoshi.body.velocity.x -=   this.acceleration ;
-            if(this.yoshi.body.velocity.x < -this.maxspeed )
-             this.yoshi.body.setVelocityX(-this.maxspeed );            
-            this.yoshi.flipX = this.yoshi.body.velocity.x < 0;
-            this.flipX = this.yoshi.body.velocity.x > 0;
-
+            this.yoshi.move('left',this.acceleration,this.maxspeed);
         }else
         if(this.cursores.right.isDown)
         {
-            this.yoshi.body.velocity.x +=  this.acceleration ;
-            if(this.yoshi.body.velocity.x >this.maxspeed )
-                this.yoshi.body.setVelocityX(this.maxspeed );            
-            this.yoshi.flipX = this.yoshi.body.velocity.x < 0;
-            this.flipX = this.yoshi.body.velocity.x > 0;
+            this.yoshi.move('right',this.acceleration,this.maxspeed);
         }
-        if(this.jumpKey)
+        if(this.jumpKey.isDown)
         {
-            
+            this.yoshi.jump();
         }
 
     }
@@ -298,6 +290,9 @@ class mario extends character
             this.setFrame(1);
         }
         this.anims.stop();
+
+   
+
     }
     setAnimation(bigAnimation, smallAnimation)
     {
