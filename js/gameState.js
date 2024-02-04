@@ -246,7 +246,7 @@ class gameState extends Phaser.Scene {
                     this.checkPointImg = this.add.image(element.x, element.y, 'checkPoint');
                     break;
                 case "stickBars":
-                    this.bar = new barsCheckPoints(this, element.x, element.y, 'checkPointBar', this.checkPointImg, true);
+                    this.bar = new barsCheckPoints(this, element.x, element.y, 'checkPointBar', this.checkPointImg, false);
                     break;
                 case "stickBarFat":
                     this.checkPointFatImg = this.add.image(element.x, element.y, 'checkPointEnd');
