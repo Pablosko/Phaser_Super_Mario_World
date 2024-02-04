@@ -267,7 +267,7 @@ class mario extends character
         {
             this.yoshi.move('right',this.acceleration,this.maxspeed);
         }
-        if(this.jumpKey.isDown)
+        if(Phaser.Input.Keyboard.DownDuration(this.jumpKey,250))
         {
             this.yoshi.jump();
         }
