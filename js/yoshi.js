@@ -105,7 +105,25 @@ class yoshi extends pickeableItem
             null,
             this
         );
+
+        this.colliderYoshiEnemies = this.scene.physics.add.collider(this, this.scene.enemies, (_yoshi, _enemy) => {
+            _yoshi.CollideWithEnemie(_yoshi, _enemy);
+            _enemy.CollideWithPlayer(_enemy, _yoshi);
+        }, null, this);
     }
+
+    CollideWithEnemie(_yoshi, _enemy)
+    {
+        if (_yoshi.body.touching.down && _enemy.body.touching.up && _enemy.isVulnerable()) {
+            _enemy.getDamage(1, _yoshi.body);
+            _yoshi.jump();
+        }
+        if (!_yoshi.body.touching.down && !_enemy.body.touching.up && _enemy.canDealDamage()) {
+            
+            // BAJAR MARIO DE YOSHI
+        }
+    }
+
     attack()
     {
         if(this.attacking)

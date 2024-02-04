@@ -9,6 +9,7 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         this.events = new Phaser.Events.EventEmitter();
         //Create Zone, la size se tiene que poner antes de hacer enable
         this.areaZone = this.scene.add.zone(posX, posY);     
+        this.setAudios();
         switch(id)
         {
             case "normal_coin":
@@ -26,6 +27,8 @@ class pickeableItem extends Phaser.GameObjects.Sprite
             case "mushroom":
                 this.setFrame(2);
                 this.areaZone.setSize(16,16);
+                this.spawnMushroom.play();
+
             break;
             default:
                 this.areaZone.setSize(16, 16);
@@ -40,11 +43,11 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         this.object = id;
         this.body.setAllowGravity(false); 
         this.body.setImmovable(true);
-        this.setAudios();
     }
 
     setAudios()
     {
+        this.spawnMushroom = this.scene.sound.add('sound_spawn_power_up', {loop: false});
         this.normalCoinSound = this.scene.sound.add('sound_pick_coin', { loop: false });
         this.pickMushroom = this.scene.sound.add('sound_pick_mushroom', { loop: false });
         this.pickPowerUp = this.scene.sound.add('sound_pick_power_up', { loop: false });
@@ -73,12 +76,14 @@ class pickeableItem extends Phaser.GameObjects.Sprite
         switch(this.object)
         {
             case "normal_coin":
+                this.scene.events.emit('addPoints', 1000);
                 this.scene.events.emit('addCoin', 1);
                 this.normalCoinSound.play();
                 this.areaZone.body.setEnable(false); 
                 this.destroy();
             break;
             case "yoshi_coin":
+                this.scene.events.emit('addPoints', 4000);
                 this.scene.events.emit('addYoshiCoin');
                 this.normalCoinSound.play();
                 this.areaZone.body.setEnable(false); 
@@ -87,7 +92,7 @@ class pickeableItem extends Phaser.GameObjects.Sprite
             case "fruit":
                 if(this.scene.mario.isOnYoshi)
                 {
-                    console.log("Eat");
+                    this.scene.events.emit('addPoints', 2000);
                     this.areaZone.body.setEnable(false);
                     this.destroy();
                 }
@@ -96,6 +101,7 @@ class pickeableItem extends Phaser.GameObjects.Sprite
                 this.anims.play('eyeCoinImpact');
             break;
             case "mushroom":
+                this.scene.events.emit('addPoints', 8000);
                 this.pickMushroom.play();
                 if(!this.scene.mario.isBigMario)
                 {

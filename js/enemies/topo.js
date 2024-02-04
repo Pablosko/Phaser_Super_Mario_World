@@ -5,17 +5,62 @@ class topo extends enemy
         super(_scene,_posX,_posY,'topo');
         this.type = _type;
         this.canMove = false;
-        this.body.setImmovable(false);
+        this.hp = 1;
+        this.body.setImmovable(true);
         this.body.setAllowGravity(false);
-
-        //setear animacion de aparicion on complete Y and then collider on y walk
+        this.enableObject = false;
         
+        this.areaZone = this.scene.add.zone(_posX, _posY);     
+        this.areaZone.setSize(128, 128);
+        this.scene.physics.world.enable(this.areaZone);
+        this.areaZone.body.setImmovable();
+        this.areaZone.body.setAllowGravity(false);
+        this.setColliders();
+        this.spawned = false;
+        this.setVisible(false);    
+        this.canChangeDirection = true;
+        this.timerEvent = this.scene.time.addEvent({
+            delay: 2000,  
+            callback: () => { 
+                if(this.canChangeDirection && this.canMove)
+                {
+                    this.changeDirection();
+                }
+             },  
+            callbackScope: this,
+            loop: true  
+        });
+    }
+
+    checkNewPathDir()
+    {
+        if(this.dead)
+            return;
+
+        if (this.scene.mario.body.x < this.x) {
+            this.pathDirection = 1;
+        } else {
+            this.pathDirection = -1;
+        }
+    }
+
+    changeDirection()
+    {
+        if(this.dead)
+            return;
+        this.canMove = false;
+        this.canChangeDirection = false;
+        this.delayed = this.scene.time.delayedCall(500, function () {
+            this.canChangeDirection = true;
+            this.checkNewPathDir();
+            this.canMove = true;
+        }, [], this);
     }
 
     enableTopo()
     {
         this.setVisible(true);
-        if(this.type = "topoFloor")
+        if(this.type === "topoFloor")
         {
             this.anims.play('spawnTopoFloor', true).on('animationcomplete', this.onSpawnComplete, this);
         }
@@ -23,15 +68,30 @@ class topo extends enemy
         {
             this.anims.play('spawnTopoWall', true).on('animationcomplete', this.onSpawnComplete, this);
         }
+
     }
 
     onSpawnComplete()
     {
         this.setFrame(2);
-        if(this.type = "topoFlorr")
-        {
-            
-        }
+        this.moveTween = this.scene.tweens.add({
+            targets: this,
+            y:  this.y - 100,
+            duration: 1000,
+            yoyo: false,
+            repeat: 0,
+            onComplete: () => {
+                this.body.setImmovable(false);
+                this.body.setAllowGravity(true);
+                this.canMove = true;
+                this.spawned = true;
+            }
+        });
+    }
+
+    jump()
+    {
+        console.log("jump")
         this.timerEvent = this.time.addEvent({
             delay: 1500,  
             callback: this.jump,  
@@ -40,70 +100,47 @@ class topo extends enemy
         });
     }
 
-    jump()
-    {
-        console.log("jump")
-    }
 
     setColliders()
     {
         super.setColliders()
-        this.scene.physics.add.collider
-        (
-            this.character,
-            this.scene.enemies,
+
+        this.overlapthing = this.scene.physics.add.overlap(
+            this.scene.mario,
+            this.areaZone,
+            () => {
+                if(!this.enableObject)
+                {
+                    this.enableObject = true;
+                }
+            },
+            null,
+            this
         );
-        
-        this.scene.physics.add.collider
-        (
-            this.character,
-            this.scene.walls
-        );
-        this.scene.physics.add.collider
-        (
-            this.character,
-            this.scene.pipes
-        )
     }
 
     preUpdate(time,delta)
     {
         super.preUpdate(time, delta);
         if(this.canMove)
-            this.body.setVelocityX(-20 * this.pathDirection);
+        {
+            this.anims.play('walkTopo', true)
+            this.body.setVelocityX(-30 * this.pathDirection);
+        }
+
+        if(this.enableObject)
+        {
+            this.enableTopo();
+            this.overlapthing.active = false;
+            this.enableObject = false;
+        }
     }
     CollideWithPlayer(enemy,player)
     {
-        if(enemy.body ==undefined)
+        if(enemy.body == undefined)
             return;
         console.log("mario collide sheel")
         super.CollideWithPlayer(enemy,player);
-        if(enemy.canMove)
-        {
-            enemy.dir = Math.sign(enemy.body.x - player.body.x);
-            enemy.trowShell(enemy.dir);
-        }else
-        {
-            //mario get damage
-        }
-    }
 
-    killTopo()
-    {
-        //Give points
-        this.destroy(this);
-    }
-
-    collideWithEnemie(enemie1,enemie2)
-    {
-        super.collideWithEnemie(enemie1,enemie2)        
-        
-        if(enemie1.body.velocity.x != 0)
-        {
-            console.log(enemie1.body.velocity)
-            console.log(enemie2)
-            console.log("kill koopa")
-            enemie2.getDamage(2000,enemie1);            
-        }
     }
 }

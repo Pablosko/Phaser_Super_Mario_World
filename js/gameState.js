@@ -21,15 +21,14 @@ class gameState extends Phaser.Scene {
         this.loadTileSets();
 
         this.load.setPath('assets/img/misc');
-        this.load.spritesheet('blocks', 'blocks.png',
-            { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('powerUps', 'starmushroom.png',
-            { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('blocks', 'blocks.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('powerUps', 'starmushroom.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('enredadera', 'plant_green.png', { frameWidth: 16, frameHeight: 16 })
+
         this.load.image('checkPointBar', 'checkpoint_bar.png');
         this.load.image('checkPointEndBar', 'checkpoint_end_bar.png');
         this.load.image('checkPointEnd', 'checkpoint_end.png');
         this.load.image('checkPoint', 'checkPoint.png');
-
 
         this.load.setPath('assets/levels');
         this.load.tilemapTiledJSON('level1', 'level1.json');
@@ -51,6 +50,7 @@ class gameState extends Phaser.Scene {
         this.load.spritesheet('topo', 'mole.png',
             { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('rugby', 'rugby_enemy.png', { frameWidth: 26, frameHeight: 27 });
+        this.load.spritesheet('redPlant', 'planta_red.png', { frameWidth: 16, frameHeight: 21 })
     }
 
     loadObjectsSprites() {
@@ -195,9 +195,13 @@ class gameState extends Phaser.Scene {
             allowGravity: false
         })
 
+        this.enredaderaGroup = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        })
+
         this.game_elements = this.map.getObjectLayer('game-elements');
         this.game_elements.objects.forEach(function (element) {
-            // ID can be -> fruit, normal_coin, yoshi_coin
             this.data = {};
             switch (element.type) {
 
@@ -223,6 +227,22 @@ class gameState extends Phaser.Scene {
                     this.object = new yellowEyeBlock(this, this.data);
                     this.allBlocks.add(this.object);
                     break;
+                    case "trasparentBlock":
+                        this.data = { posX: element.x, posY: element.y, spriteTag: 'blocks', frame: 0 }
+                        this.obj = new trasparentBlock(this, this.data);
+                        this.allBlocks.add(this.obj);
+                        break;
+                case "normalBlock":
+                    this.data = { posX: element.x, posY: element.y, spriteTag: 'blocks', frame: 1 }
+                    this.obj = new normalBlock(this, this.data);
+                    this.allBlocks.add(this.obj);
+                    break;
+                case "enredadera":
+                    this.data = { posX: element.x, posY: element.y, spriteTag: 'enredadera', frame: 2 }
+                    this.obj = new enredaderaBlock(this, this.data);
+                    this.obj.setVisible(false);
+                    this.enredaderaGroup.add(this.obj);
+                break;
                 case "buttonP":
                     this.data = { posX: element.x, posY: element.y, spriteTag: 'buttonP', frame: 0 }
                     this.pBlock = new buttonPBlock(this, this.data);
@@ -233,21 +253,35 @@ class gameState extends Phaser.Scene {
                     this.allBlocks.add(this.object);
                     break;
                 case "topoFloor":
-                    //  const objectTopo = {posX : element.x, posY: element.y, spriteTag: 'blocks', frame : 3}
-                    //this.object = new 
+                    this.topoObj = new topo(this, element.x, element.y, 'topoFloor')
+                    this.enemies.add(this.topoObj);
                     break;
                 case "topoWall":
+                    this.topoObj = new topo(this, element.x, element.y, 'topoWall')
+                    this.enemies.add(this.topoObj);
                     break;
                 case "koopa":
                     //create little kopa
+                    this.CreateLittleKoopa(element.x,element.y, -1, 'redKoopa');
                     break;
                     
-                    case "shellGreen":
-                        //create green sehll
-                    break;
-                    case "shellRed":
-                            //create red shell
-                        break;
+                case "shellGreen":
+                        this.newKoopa = new koopa(this, element.x, element.y, 'redKoopa');
+                        this.newKoopa.transformToLittle();
+                        this.enemies.add(this.newKoopa);
+                break;
+                case "shellRed":
+                            this.newKoopa = new koopa(this, element.x, element.y, 'redKoopa');
+                            this.newKoopa.transformToLittle();
+                            this.enemies.add(this.newKoopa);
+                break;
+
+                case "plant":
+                    this.plant = new redPlant(this, element.x, element.y, 'redPlant');
+                    this.plant.setSize(8, 8);
+                    this.plant.setDepth(-25)
+                    this.enemies.add(this.plant);
+                break;
                 case "enemyRugby":
                     this.enemies.add(new rugby(this, element.x, element.y, "rugbyEnemy"));
                     break;
@@ -287,7 +321,13 @@ class gameState extends Phaser.Scene {
         this.loadMoleAnimations();
         this.loadRugbyAnimations();
         //Misc animations
-
+        this.anims.create(
+            {
+                key: 'plantRedIdle',
+                frames: this.anims.generateFrameNumbers('redPlant', { start: 0, end: 1 }),
+                frameRate: 11,
+                repeat: -1
+            });
         this.anims.create(
             {
                 key: 'lootBlockAnimation',
@@ -346,12 +386,6 @@ class gameState extends Phaser.Scene {
                 frameRate: 6,
                 repeat: -1
             });
-        /* yoshi scary jump frame 3,
-            3 -> Jump to eat
-            4 -> Jump while eating
-            5 -> random
-            6 - 7 -> walking no mario up
-        */
 
         this.anims.create(
             {
@@ -441,14 +475,14 @@ class gameState extends Phaser.Scene {
                 key: 'spawnTopoWall',
                 frames: this.anims.generateFrameNumbers('topo', { start: 3, end: 4 }),
                 frameRate: 11,
-                repeat: -1
+                repeat: 3
             });
         this.anims.create(
             {
                 key: 'spawnTopoFloor',
                 frames: this.anims.generateFrameNumbers('topo', { start: 5, end: 6 }),
                 frameRate: 11,
-                repeat: -1
+                repeat: 3
             });
     }
 

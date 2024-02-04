@@ -1,15 +1,16 @@
-class normalBlock extends block {
+
+class trasparentBlock extends block{
     constructor(_scene, block)
-    {
+    { //instanciar el objeto
         super(_scene, block);
         this.setFrame(block.frame);        
     }
-
+    
     setCollider()
     {
-        super.setCollider();
+
     }
-    
+   
     preUpdate(time,delta)
     {
         super.preUpdate(time, delta);

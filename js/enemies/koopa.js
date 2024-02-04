@@ -127,9 +127,13 @@ class koopa extends enemy
     {
         super.collideWithEnemie(enemie1,enemie2)        
         
-        if(enemie1.isShell && enemie1.body.velocity.x != 0)
+        if(enemie1.isShell && enemie1.body.velocity.x != 0 && !enemie2.isShell)
         {
-            enemie2.getDamage(2000,enemie1);            
+            enemie2.getDamage(2, enemie1);            
+        }
+        if(enemie1.isShell && enemie2.isShell)
+        {
+            //change dir
         }
     }
 }

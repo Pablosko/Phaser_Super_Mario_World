@@ -11,9 +11,9 @@ class mario extends character {
         this.canJump = true;
         this.spining = false;
         this.cursores = this.scene.input.keyboard.createCursorKeys();
-        this.jumpKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-        this.spinKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
-        this.runkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+        this.jumpKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+        this.spinKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.runkey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.body.setSize(this.width * 0.5, this.height);
         this.hp = 1;
         this.dead = false;
@@ -21,8 +21,10 @@ class mario extends character {
         this.yoshi = undefined;
         this.isBigMario = false;
         this.jumpSound = this.scene.sound.add('sound_jump', { loop: false });
+        this.spinJump = this.scene.sound.add('sound_spin_jump', {loop: false});
         this.checkPX = this.x;
         this.checkPY = this.y;
+        this.dieSound = this.scene.sound.add('sound_death', {loop: false});
     }
 
     returnToCheckPoint() {
@@ -39,11 +41,12 @@ class mario extends character {
 
 
     returnToCheckPoint() {
+        this.setTexture('mario');
         this.setFrame(0);
         this.dead = false
         this.collider.active = true;
         this.collider2.active = true;
-        this.scene.colliderMarioEnemies = true;
+        this.scene.colliderMarioEnemies.active = true;
         this.x = this.checkPX;
         this.y = this.checkPY;
         this.body.x = this.checkPX;
@@ -78,6 +81,7 @@ class mario extends character {
         this.setFrame(0);
     }
     onDie() {
+        this.dieSound.play();
         this.setTexture('marioDeath');
         this.scene.cameras.main.fadeOut(2000);
         this.scene.colliderMarioEnemies.active = false;
@@ -96,7 +100,6 @@ class mario extends character {
             this.scene.showGameOverMenu(false);
 
         });
-
     }
 
     jump() {
@@ -108,7 +111,6 @@ class mario extends character {
             this.setFrame(8);
         }
         else {
-
             this.setFrame(11);
         }
         this.jumping = true;
@@ -163,9 +165,6 @@ class mario extends character {
             this.yoshiInputs();
         } else
             this.normalInputs();
-
-
-
         super.preUpdate(time, delta);
     }
     normalInputs() {
@@ -176,14 +175,12 @@ class mario extends character {
             if (this.body.velocity.x < -this.maxspeed)
                 this.body.setVelocityX(-this.maxspeed);
             this.flipX = this.body.velocity.x > 0;
-            //this.scene.TryParallax(-1);          
         } else
             if (this.cursores.right.isDown) {
                 this.body.velocity.x += this.acceleration;
                 if (this.body.velocity.x > this.maxspeed)
                     this.body.setVelocityX(this.maxspeed);
                 this.flipX = this.body.velocity.x > 0;
-                //  this.scene.TryParallax(1);
             }
         {
             if (!this.jumping) {
@@ -281,9 +278,6 @@ class mario extends character {
             this.setFrame(1);
         }
         this.anims.stop();
-
-
-
     }
     setAnimation(bigAnimation, smallAnimation) {
         if (this.isBigMario) {
