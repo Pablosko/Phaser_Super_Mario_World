@@ -23,8 +23,7 @@ class buttonPBlock extends block
             () => { this.body.immovable = true;},
             null,
             this
-        );
-     
+        );   
       
     }
 
@@ -40,7 +39,7 @@ class buttonPBlock extends block
         this.scene.time.delayedCall(250, () => {
             this.setVisible(false);
         });
-        this.scene.time.delayedCall(1000, () => {
+        this.scene.time.delayedCall(7000, () => {
 
             this.body.setEnable(true);
             this.anims.stop();
@@ -61,7 +60,6 @@ class buttonPBlock extends block
     convertToCoins() {
         this.setFrame(0);
 
-        // Destruir todos los elementos dentro del grupo 'blocks'
         this.blocks.clear(true, true);
 
         if (this.scene && this.scene.coinsGroup) {

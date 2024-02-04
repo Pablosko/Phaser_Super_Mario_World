@@ -9,7 +9,7 @@ class topo extends enemy
         this.body.setImmovable(true);
         this.body.setAllowGravity(false);
         this.enableObject = false;
-        
+        this.canBeKilled = false;
         this.areaZone = this.scene.add.zone(_posX, _posY);     
         this.areaZone.setSize(128, 128);
         this.scene.physics.world.enable(this.areaZone);
@@ -44,17 +44,30 @@ class topo extends enemy
         }
     }
 
+    getDamage(damage,body)
+    {
+        this.hp-= damage
+        if(this.hp <= 0 && this.canBeKilled)
+        {
+            this.scene.time.removeEvent(this.delayed);
+            this.destroy(this);
+        }
+    }
     changeDirection()
     {
         if(this.dead)
             return;
         this.canMove = false;
         this.canChangeDirection = false;
-        this.delayed = this.scene.time.delayedCall(500, function () {
-            this.canChangeDirection = true;
-            this.checkNewPathDir();
-            this.canMove = true;
-        }, [], this);
+        if(this.scene)
+        {
+            this.delayed = this.scene.time.delayedCall(500, function () {
+                this.canChangeDirection = true;
+                this.checkNewPathDir();
+                this.canMove = true;
+            }, [], this);
+        }
+
     }
 
     enableTopo()
@@ -85,6 +98,7 @@ class topo extends enemy
                 this.body.setAllowGravity(true);
                 this.canMove = true;
                 this.spawned = true;
+                this.canBeKilled = true;
             }
         });
     }
@@ -139,7 +153,6 @@ class topo extends enemy
     {
         if(enemy.body == undefined)
             return;
-        console.log("mario collide sheel")
         super.CollideWithPlayer(enemy,player);
 
     }

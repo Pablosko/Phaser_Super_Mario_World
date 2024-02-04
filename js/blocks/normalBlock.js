@@ -8,8 +8,10 @@ class normalBlock extends block {
     setCollider()
     {
         super.setCollider();
+
     }
     
+
     preUpdate(time,delta)
     {
         super.preUpdate(time, delta);

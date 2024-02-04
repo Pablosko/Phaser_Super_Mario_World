@@ -28,6 +28,7 @@ class mario extends character {
     }
 
     returnToCheckPoint() {
+        this.scene.backgroundGameMusic.play()
         this.setFrame(0);
         this.dead = false
         this.collider.active = true;
@@ -81,6 +82,7 @@ class mario extends character {
         this.setFrame(0);
     }
     onDie() {
+        this.scene.backgroundGameMusic.stop()
         this.dieSound.play();
         this.setTexture('marioDeath');
         this.scene.cameras.main.fadeOut(2000);
@@ -243,7 +245,10 @@ class mario extends character {
         this.body.x = this.x;
         this.body.y = this.y;
 
-
+        if(this.yoshi.grounded)
+        {
+            this.yoshi.body.checkCollision.up = false;
+        }
         this.maxspeed = gamePrefs.PLAYER_MAX_SPEED 
         this.acceleration = gamePrefs.PLAYER_ACCELERATION;
         if (this.cursores.left.isDown) {
@@ -264,6 +269,12 @@ class mario extends character {
         if(this.runkey.isDown && !this.yoshi.attacking)
         {
             this.yoshi.attack()
+        }
+        if(this.spinKey.isDown)
+        {
+            this.yoshi.hit = true
+            this.yoshicanBePick = true;
+            this.yoshi = undefined;
         }
 
     }

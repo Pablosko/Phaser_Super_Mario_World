@@ -22,7 +22,7 @@ class yoshi extends pickeableItem
         this.offsetX = 0;
         this.offsetY = 0;
         this.attackSide = 0;
-
+        this.hit = false;
     }
 
     preUpdate(time, delta)
@@ -30,6 +30,14 @@ class yoshi extends pickeableItem
         console.log(this.texture.key);
 
         super.preUpdate(time, delta);
+        if(this.hit)
+        {
+            this.body.setVelocityX(20);
+            this.areaZone.body.setEnable(true); 
+            this.areaZone.x = this.body.x;
+            this.areaZone.y = this.body.y;
+        }
+
         if (this.jumpCooldown > 0) 
             this.jumpCooldown -= delta;
 
@@ -106,11 +114,22 @@ class yoshi extends pickeableItem
             this
         );
 
+        this.scene.physics.add.overlap(
+            this,
+            this.scene.fruitGroup,
+            (thisEntity, fruit) => {
+                fruit.pickItem();
+            },
+            null,
+            this
+        );
+
         this.colliderYoshiEnemies = this.scene.physics.add.collider(this, this.scene.enemies, (_yoshi, _enemy) => {
             _yoshi.CollideWithEnemie(_yoshi, _enemy);
             _enemy.CollideWithPlayer(_enemy, _yoshi);
         }, null, this);
     }
+
 
     CollideWithEnemie(_yoshi, _enemy)
     {
@@ -119,8 +138,9 @@ class yoshi extends pickeableItem
             _yoshi.jump();
         }
         if (!_yoshi.body.touching.down && !_enemy.body.touching.up && _enemy.canDealDamage()) {
-            
-            // BAJAR MARIO DE YOSHI
+            this.hit = true
+            this.scene.mario.yoshi = undefined;
+            this.canBePick = true;
         }
     }
 
@@ -164,8 +184,8 @@ class yoshi extends pickeableItem
         if(!this.canBePick)
             return;
 
+        this.hit = false;
         this.areaZone.body.setEnable(false); 
-        //this.normalCoinSound.play();
         this.scene.mario.startRiding(this);
         this.scene.time.removeEvent(this.jumpEvent);
     }
@@ -175,6 +195,7 @@ class yoshi extends pickeableItem
     }
     startJumping()
     {
+        // this.body.checkCollision.up = true;
         this.setTexture('yoshiSprites');
         this.setFrame(3);
         this.grounded = false;

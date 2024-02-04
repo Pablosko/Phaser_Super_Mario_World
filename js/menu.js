@@ -65,12 +65,12 @@ class menu extends Phaser.Scene
 
     cameraFade()
     {
-        this.cameras.main.fadeOut(10);
+        this.cameras.main.fadeOut(1500);
         
         this.tweens.add({
             targets:  this.backgroundMusic,
             volume:   0,
-            duration: 10
+            duration: 1100
         });
         this.cameras.main.once('camerafadeoutcomplete', () => {this.scene.start('main_scene'); this.scene.start('UIScene');});
     }

@@ -131,7 +131,7 @@ class gameState extends Phaser.Scene {
         this.imagenTemporal = this.add.image(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'bg_start');
         this.imagenTemporal.setOrigin(0.5, 0.5);
 
-        this.time.delayedCall(150, () => {
+        this.time.delayedCall(1000, () => {
             this.imagenTemporal.destroy();
             this.loadAnimations();
             this.generateMap();
@@ -140,7 +140,9 @@ class gameState extends Phaser.Scene {
             this.bg.setDepth(-50);
             this.bg.setScrollFactor(0, 1);
 
+            //this.mario = new mario(this, config.width * .2, config.height + 100);
             this.mario = new mario(this, config.width * .2, config.height + 100);
+   
             this.generateGameElements();
             this.cameras.main.startFollow(this.mario);
             this.cameras.main.setBounds(0, 0, gamePrefs.level1Width, gamePrefs.level1Height);
@@ -170,6 +172,7 @@ class gameState extends Phaser.Scene {
         this.map.createLayer('layer_plantas', 'tileset_ground');
         this.map.createLayer('layer_vegetation_back', 'tileset_arbusto');
         this.vege = this.map.createLayer('layer_vegetation', 'tileset_arbusto');
+        this.vege.setDepth(-5);
         //Set de los colliders
         this.map.setCollisionByExclusion([-1], true, true, 'layer_ground');
         this.map.setCollisionByExclusion([-1], true, true, 'layer_pipes');
@@ -200,6 +203,12 @@ class gameState extends Phaser.Scene {
             allowGravity: false
         })
 
+        this.fruitGroup = this.physics.add.group({
+            immovable: true,
+            allowGravity: false
+        })
+
+
         this.game_elements = this.map.getObjectLayer('game-elements');
         this.game_elements.objects.forEach(function (element) {
             this.data = {};
@@ -212,6 +221,7 @@ class gameState extends Phaser.Scene {
                     break;
                 case "fruit":
                     this.object = new pickeableItem(this, element.x, element.y, "fruit", 'apple');
+                    this.fruitGroup.add(this.object);
                     break;
                 case "koopaShell":
                     this.enemies.add(new koopa(this, element.x, element.y, 'redKoopa'));
@@ -261,14 +271,11 @@ class gameState extends Phaser.Scene {
                     this.enemies.add(this.topoObj);
                     break;
                 case "koopa":
-                    //create little kopa
-                    this.CreateLittleKoopa(element.x,element.y, -1, 'redKoopa');
+                    this.enemies.add(new koopa(this, element.x, element.y, 'redKoopa'));
                     break;
                     
                 case "shellGreen":
-                        this.newKoopa = new koopa(this, element.x, element.y, 'redKoopa');
-                        this.newKoopa.transformToLittle();
-                        this.enemies.add(this.newKoopa);
+                        this.enemies.add(new koopa(this, element.x, element.y, 'redKoopa'));
                 break;
                 case "shellRed":
                             this.newKoopa = new koopa(this, element.x, element.y, 'redKoopa');
@@ -293,11 +300,10 @@ class gameState extends Phaser.Scene {
                     break;
                 case "stickBarFat":
                     this.checkPointFatImg = this.add.image(element.x, element.y, 'checkPointEnd');
+                    this.bar2 = new barsCheckPoints(this, this.barsFat.x, this.barsFat.y, 'checkPointEndBar', this.checkPointFatImg, true);
                     break;
                 case "barsFat":
-                    if (this.checkPointFatImg) {
-                        this.bar2 = new barsCheckPoints(this, element.x, element.y, 'checkPointEndBar', this.checkPointFatImg, true);
-                    }
+                    this.barsFat = {x: element.x, y: element.y}
                     break;
             }
         }, this);
@@ -307,6 +313,7 @@ class gameState extends Phaser.Scene {
         this.physics.add.collider(this.mario, this.lootBlocks, (_mario, _block) => { this.mario.OnWallCollide(_mario, _block) }, null, this);
         this.physics.add.collider(this.pBlock, this.allBlocks, (_mario, _block) => { }, null, this);
         this.physics.add.collider(this.enemies, this.walls, (_enemie, _wall) => { }, null, this);
+        this.physics.add.collider(this.enemies, this.allBlocks, (_enemie, blockss) => { }, null, this);
         this.colliderMarioEnemies = this.physics.add.collider(this.mario, this.enemies, (_mario, _enemie) => {
             _mario.CollideWithEnemie(_mario, _enemie);
             _enemie.CollideWithPlayer(_enemie, _mario);
@@ -581,6 +588,8 @@ class gameState extends Phaser.Scene {
 
         if(!this.win)
         {
+            this.cameras.main.stopFollow(this.mario)
+            this.mario.body.setVelocityX(0);
             this.mario.dead = true;
             this.win = true;
             this.wid = this.cameras.main.width / 2 + this.cameras.main.scrollX;
@@ -592,11 +601,10 @@ class gameState extends Phaser.Scene {
     
             this.bg_win = this.add.image(this.wid, this.hei, 'bg_win');
             this.bg_win.setDepth(50);
-    
-            this.time2 = this.add.bitmapText(this.wid * 0.68, this.hei * 1.01, 'UIfont', '' + currentTimeValue, 8).setDepth(5);
-            this.multiplier = this.add.bitmapText(this.wid * 0.92, this.hei * 1.01, 'UIfont', '50', 8).setDepth(5);
+            this.time2 = this.add.bitmapText(this.wid * 0.9915 , this.hei, 'UIfont', '' + currentTimeValue, 8).setDepth(5);
+            this.multiplier = this.add.bitmapText(this.wid * 0.99985, this.hei, 'UIfont', '50', 8).setDepth(5);
             this.result = currentTimeValue * 50;
-            this.resulttxt = this.add.bitmapText(this.wid * 1.2, this.hei * 1.01, 'UIfont', '' + this.result, 8).setDepth(5);
+            this.resulttxt = this.add.bitmapText(this.wid * 1.005, this.hei * 1.003, 'UIfont', '' + this.result, 8).setDepth(5);
             this.events.emit('addPoints', this.result);
     
             this.time2.setDepth(105);
@@ -604,7 +612,7 @@ class gameState extends Phaser.Scene {
     
             this.resulttxt.setDepth(105);
     
-            this.time.delayedCall(10000, function () {
+            this.time.delayedCall(5000, function () {
                 this.scene.stop('UIScene');
                 this.scene.stop('main_scene');
                 this.scene.start('menu');

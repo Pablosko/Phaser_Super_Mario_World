@@ -15,7 +15,7 @@ class barsCheckPoints extends Phaser.GameObjects.Sprite {
         this.setCollider();
         this.setCheckPoint = false;
         this.moveTween = this.scene.tweens.add({
-            targets: this,
+            targets: [this, this.areaZone],
             y: this.target.y - this.target.height / 2,
             duration: 2000,
             yoyo: true,
@@ -48,8 +48,8 @@ class barsCheckPoints extends Phaser.GameObjects.Sprite {
             if(!this.setCheckPoint)
             {
                 this.setCheckPoint = true;
-                this.scene.mario.checkPX = this.x;
-                this.scene.mario.checkPY = this.y;
+                this.scene.mario.checkPX = 2583;
+                this.scene.mario.checkPY = 351;
                 this.destroy();
             }
         }

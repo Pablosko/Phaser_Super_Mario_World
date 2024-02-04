@@ -36,15 +36,11 @@ class koopa extends enemy
     {
         if(enemie.body ==undefined)
             return;
-        console.log("mario collide sheel")
         super.CollideWithPlayer(enemie,player);
         if(enemie.isShell && enemie.canMove)
         {
             enemie.dir = Math.sign(enemie.body.x - player.body.x);
             enemie.trowShell(enemie.dir);
-        }else
-        {
-            //mario get damage
         }
     }
     trowShell(dir)
@@ -126,14 +122,15 @@ class koopa extends enemy
     collideWithEnemie(enemie1,enemie2)
     {
         super.collideWithEnemie(enemie1,enemie2)        
-        
+        console.log("collisiona enemig");
         if(enemie1.isShell && enemie1.body.velocity.x != 0 && !enemie2.isShell)
         {
+            console.log("entro a dmg");
             enemie2.getDamage(2, enemie1);            
         }
         if(enemie1.isShell && enemie2.isShell)
         {
-            //change dir
+  
         }
     }
 }

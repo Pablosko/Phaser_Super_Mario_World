@@ -90,7 +90,7 @@ class pickeableItem extends Phaser.GameObjects.Sprite
                 this.destroy();
             break;     
             case "fruit":
-                if(this.scene.mario.isOnYoshi)
+                if(this.scene.mario.yoshi != undefined)
                 {
                     this.scene.events.emit('addPoints', 2000);
                     this.areaZone.body.setEnable(false);
