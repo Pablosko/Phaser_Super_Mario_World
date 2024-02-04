@@ -27,20 +27,7 @@ class mario extends character {
         this.dieSound = this.scene.sound.add('sound_death', {loop: false});
     }
 
-    returnToCheckPoint() {
-        this.scene.backgroundGameMusic.play()
-        this.setFrame(0);
-        this.dead = false
-        this.collider.active = true;
-        this.collider2.active = true;
-        this.scene.colliderMarioEnemies = true;
-        this.x = this.checkPX;
-        this.y = this.checkPY;
-        this.body.x = this.checkPX;
-        this.body.y = this.checkPY;
-    }
-
-
+  
     returnToCheckPoint() {
         this.setTexture('mario');
         this.setFrame(0);
@@ -52,6 +39,8 @@ class mario extends character {
         this.y = this.checkPY;
         this.body.x = this.checkPX;
         this.body.y = this.checkPY;
+        this.scene.backgroundGameMusic.play()
+
     }
 
     getDamage(damage) {

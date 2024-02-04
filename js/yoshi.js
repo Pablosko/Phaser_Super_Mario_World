@@ -32,7 +32,7 @@ class yoshi extends pickeableItem
         super.preUpdate(time, delta);
         if(this.hit)
         {
-            this.body.setVelocityX(20);
+            this.body.setVelocityX(60);
             this.areaZone.body.setEnable(true); 
             this.areaZone.x = this.body.x;
             this.areaZone.y = this.body.y;

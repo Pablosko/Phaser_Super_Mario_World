@@ -588,6 +588,7 @@ class gameState extends Phaser.Scene {
 
         if(!this.win)
         {
+            this.backgroundGameMusic.stop();
             this.cameras.main.stopFollow(this.mario)
             this.mario.body.setVelocityX(0);
             this.mario.dead = true;
